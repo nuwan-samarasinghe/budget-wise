@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/gradle:/app/gradle
+      - ./backend/gradlew:/app/gradlew
+      - ./backend/build.gradle:/app/build.gradle
+      - ./backend/settings.gradle:/app/settings.gradle
+    environment:
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/budget_wise
+      - SPRING_DATASOURCE_USERNAME=budget_wise
+      - SPRING_DATASOURCE_PASSWORD=budget_wise
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  db:
+    image: postgres:16.9-bullseye
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: budget_wise
+      POSTGRES_USER: budget_wise
+      POSTGRES_PASSWORD: budget_wise
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
