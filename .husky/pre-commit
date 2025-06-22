@@ -1,1 +1,14 @@
-npm test
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Running Spotless and Prettier formatting..."
+
+# Backend (Java)
+cd backend
+./gradlew spotlessApply
+
+# Frontend (JS/TS)
+cd ../frontend
+npx prettier --write .
+
+echo "Formatting complete."
