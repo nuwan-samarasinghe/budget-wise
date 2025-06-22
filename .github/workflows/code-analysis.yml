@@ -1,0 +1,43 @@
+name: SonarQube
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  sonar-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: oracle-actions/setup-java@v1
+        name: 'Set up latest Oracle JDK 24'
+        with:
+          website: oracle.com
+          release: 24
+      - name: Build & Test
+        working-directory: backend
+        run: ./gradlew clean build
+      - uses: SonarSource/sonarqube-scan-action@v5
+        name: Run SonarCloud Scan
+        with:
+          projectBaseDir: backend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  sonar-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - uses: SonarSource/sonarqube-scan-action@v5
+        name: Run SonarCloud Scan
+        with:
+          projectBaseDir: frontend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
