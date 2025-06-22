@@ -10,4 +10,4 @@ RUN ./gradlew dependencies --no-daemon
 COPY src src
 
 # Run with Spring DevTools
-CMD ["sh", "-c", "./gradlew bootRun --no-daemon -x test"]
+CMD ["sh", "-c", "./gradlew bootRun -x test"]

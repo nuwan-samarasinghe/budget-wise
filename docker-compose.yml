@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "8080:8080"
+      - "5005:5005"
     volumes:
       - ./backend/src:/app/src
       - ./backend/gradle:/app/gradle
@@ -17,6 +18,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/budget_wise
       - SPRING_DATASOURCE_USERNAME=budget_wise
       - SPRING_DATASOURCE_PASSWORD=budget_wise
+      - ORG_GRADLE_VFS_WATCH=false
 
   frontend:
     build:
