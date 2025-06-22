@@ -1,0 +1,21 @@
+{
+  "name": "budget-wise",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Online personal budget management",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-personal:nuwan-samarasinghe/budget-wise.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
