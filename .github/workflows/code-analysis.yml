@@ -16,16 +16,10 @@ jobs:
           release: 24
       - name: Build & Test
         working-directory: backend
-        run: ./gradlew clean build
-      - name: Check compiled classes
-        run: ls -R build/classes/java/main
-      - uses: SonarSource/sonarqube-scan-action@v5
-        name: Run SonarCloud Scan
-        with:
-          projectBaseDir: backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew clean build sonar
   sonar-frontend:
     runs-on: ubuntu-latest
     steps:
