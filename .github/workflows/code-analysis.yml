@@ -17,6 +17,8 @@ jobs:
       - name: Build & Test
         working-directory: backend
         run: ./gradlew clean build
+      - name: Check compiled classes
+        run: ls -R build/classes/java/main
       - uses: SonarSource/sonarqube-scan-action@v5
         name: Run SonarCloud Scan
         with:
