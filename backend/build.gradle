@@ -41,7 +41,7 @@ bootRun {
 
 sonar {
   properties {
-    property "sonar.projectKey", "org-frontend"
+    property "sonar.projectKey", "budget-wise-backend"
     property "sonar.organization", "nuwan-samarasinghe"
     property "sonar.host.url", "https://sonarcloud.io"
 	property "sonar.java.binaries", "build/classes/java/main"
