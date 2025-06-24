@@ -22,8 +22,8 @@ A quick glance at our SonarCloud quality gate status for both backend and fronte
 
 | Component | Quality Gate Status |
 |----------|----------------------|
-| backend  | [![backend Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=org-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=org-backend) |
-| frontend | [![frontend Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=org-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=org-frontend) |
+| backend  | [![backend Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=budget-wise-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=budget-wise-backend) |
+| frontend | [![frontend Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=budget-wise-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=budget-wise-frontend) |
 
 ---
 
