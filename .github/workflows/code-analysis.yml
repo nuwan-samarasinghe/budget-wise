@@ -16,7 +16,7 @@ jobs:
           release: 24
       - name: Build & Test
         working-directory: backend
-        run: ./gradlew clean build
+        run: ./gradlew clean build test
       - uses: SonarSource/sonarqube-scan-action@v5
         name: Run SonarCloud Scan
         with:
