@@ -3,30 +3,45 @@ package com.budgetwise.backend.repositories;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.budgetwise.backend.common.AbstractBaseTest;
+import com.budgetwise.backend.common.data.FactoryManager;
 import com.budgetwise.backend.models.User;
-import jakarta.transaction.Transactional;
 import java.util.Optional;
+import java.util.UUID;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@DisplayName("UserRepository Integration Tests")
 public class UserRepositoryTest extends AbstractBaseTest {
 
 	@Autowired
-	private UserRepository userRepository;
+	private FactoryManager factory;
 
-	@Transactional
+	@Autowired
+	private RepositoryManager repository;
+
 	@Test
+	@DisplayName("Should persist and retrieve a new user")
 	public void testAddNewUser() {
-		User user = new User();
-		user.setEmail("test@example.com");
-		user.setPassword("password");
-		user.setUserName("testuser");
-		user.setActive(true);
+		User saved_user = this.factory.user.createAndPersist();
+		Optional<User> userOptional = this.repository.user.findById(saved_user.getId());
+		assertThat(userOptional).isPresent();
+		assertThat(userOptional.get().getEmail()).isEqualTo(saved_user.getEmail());
+	}
 
-		User saved_user = this.userRepository.saveAndFlush(user);
+	@Test
+	@DisplayName("Should return empty when user ID does not exist")
+	public void testFindUserById_notFound() {
+		Optional<User> userOptional = this.repository.user.findById(UUID.randomUUID());
+		assertThat(userOptional).isNotPresent();
+	}
 
-		Optional<User> found = userRepository.findById(saved_user.getId());
-		assertThat(found).isPresent();
-		assertThat(found.get().getEmail()).isEqualTo("test@example.com");
+	@Test
+	@DisplayName("Should find user by email")
+	public void testFindByEmail() {
+		User saved_user = this.factory.user.createAndPersist();
+		Optional<User> foundUser = this.repository.user.findByEmail(saved_user.getEmail());
+		assertThat(foundUser).isPresent();
+		assertThat(foundUser.get().getId()).isEqualTo(saved_user.getId());
 	}
 }
