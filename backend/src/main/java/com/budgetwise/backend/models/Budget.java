@@ -24,13 +24,13 @@ public class Budget extends BaseModel {
 
 	private BigDecimal limitAmount;
 
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	@JsonBackReference
 	private User user;
 
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "category_id")
-	@JsonBackReference
 	private Category category;
 }

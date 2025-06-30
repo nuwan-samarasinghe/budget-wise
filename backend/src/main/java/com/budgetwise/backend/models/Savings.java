@@ -26,8 +26,8 @@ public class Savings extends BaseModel {
 
 	private String notes;
 
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	@JsonBackReference
 	private User user;
 }

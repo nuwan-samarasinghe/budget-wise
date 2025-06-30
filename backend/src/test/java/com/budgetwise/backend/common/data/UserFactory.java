@@ -16,10 +16,9 @@ public class UserFactory extends AbstractFactory<User> {
 	protected User build() {
 		User user = new User();
 		user.setFullName(faker.name().fullName());
-		user.setEmail(faker.internet().emailAddress());
 		user.setActive(true);
 		user.setPassword(faker.pokemon().name());
-		user.setUserName(faker.name().firstName().toLowerCase() + UUID.randomUUID().toString());
+		user.setUsername(faker.name().firstName().toLowerCase() + UUID.randomUUID().toString());
 		return user;
 	}
 }

@@ -27,16 +27,16 @@ public class Category extends BaseModel {
 
 	private String name;
 
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 	@JsonManagedReference
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 	private List<Expense> expenses;
 
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 	@JsonManagedReference
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 	private List<Budget> budgets;
 
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = true)
-	@JsonBackReference
 	private User user;
 }

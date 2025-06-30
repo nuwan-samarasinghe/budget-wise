@@ -28,13 +28,13 @@ public class Expense extends BaseModel {
 
 	private String note;
 
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	@JsonBackReference
 	private User user;
 
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "category_id")
-	@JsonBackReference
 	private Category category;
 }

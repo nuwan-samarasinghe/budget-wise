@@ -8,26 +8,27 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "bwise_user")
-public class User extends BaseModel {
+public class User extends BaseModel implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
 	@Column(nullable = false, unique = true)
-	private String userName;
-
-	@Column(nullable = false, unique = true)
-	private String email;
+	private String username;
 
 	@Column(nullable = false)
 	private String password;
@@ -35,19 +36,29 @@ public class User extends BaseModel {
 	private boolean isActive;
 	private String fullName;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Salary> salaries;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Savings> savings;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Budget> budgets;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Category> categories;
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+	}
+
+	@Override
+	public String getUsername() {
+		return this.username;
+	}
 }
