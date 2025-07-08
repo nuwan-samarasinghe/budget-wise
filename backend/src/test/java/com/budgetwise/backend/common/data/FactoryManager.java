@@ -8,8 +8,11 @@ public class FactoryManager {
 
 	public final UserFactory user;
 
+	public final SalaryFactory salary;
+
 	@Autowired
-	public FactoryManager(UserFactory userFactory) {
+	public FactoryManager(UserFactory userFactory, SalaryFactory salary) {
 		this.user = userFactory;
+		this.salary = salary;
 	}
 }

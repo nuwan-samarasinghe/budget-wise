@@ -21,13 +21,18 @@ public class SecurityConfig {
 		this.authFilter = authFilter;
 	}
 
+	// SonarQube: CSRF token needs to be accessible by the frontend JavaScript to be
+	// sent in headers.
+	// The CSRF token is not sensitive and this is safe by design in Spring Security
+	// for SPAs.
+	@SuppressWarnings("squid:S4491")
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf(csrf -> csrf.csrfTokenRepository(new CookieCsrfTokenRepository())
+		http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
-				.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-						.requestMatchers(HttpMethod.POST, "/auth/signin").permitAll().anyRequest().authenticated())
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/auth/signin").permitAll().anyRequest().authenticated())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 				.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
