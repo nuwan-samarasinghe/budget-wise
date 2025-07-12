@@ -25,7 +25,7 @@ public class SecurityConfig {
 	// sent in headers.
 	// The CSRF token is not sensitive and this is safe by design in Spring Security
 	// for SPAs.
-	@SuppressWarnings("squid:S4491")
+	@SuppressWarnings("java:S3330")
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())

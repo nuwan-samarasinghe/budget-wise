@@ -10,9 +10,12 @@ public class FactoryManager {
 
 	public final SalaryFactory salary;
 
+	public final SavingFactory saving;
+
 	@Autowired
-	public FactoryManager(UserFactory userFactory, SalaryFactory salary) {
+	public FactoryManager(UserFactory userFactory, SalaryFactory salary, SavingFactory saving) {
 		this.user = userFactory;
 		this.salary = salary;
+		this.saving = saving;
 	}
 }

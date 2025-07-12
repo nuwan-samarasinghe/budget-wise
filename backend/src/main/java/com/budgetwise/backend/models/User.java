@@ -42,7 +42,7 @@ public class User extends BaseModel implements UserDetails {
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Savings> savings;
+	private List<Saving> savings;
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

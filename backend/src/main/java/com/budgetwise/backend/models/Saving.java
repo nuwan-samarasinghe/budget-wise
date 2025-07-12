@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "bwise_savings")
-public class Savings extends BaseModel {
+public class Saving extends BaseModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
