@@ -13,4 +13,5 @@ public class SavingDto {
 	private UUID id;
 	private BigDecimal amount;
 	private String notes;
+	private CategoryDto category;
 }
