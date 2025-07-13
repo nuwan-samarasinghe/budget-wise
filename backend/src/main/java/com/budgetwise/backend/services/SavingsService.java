@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SavingsService {
@@ -33,6 +34,7 @@ public class SavingsService {
 				.map(saving -> this.mapper.map(saving, SavingDto.class)).toList());
 	}
 
+	@Transactional
 	public ResponseEntity<SavingDto> createOrUpdateSavings(SavingDto dto) {
 		Saving mappedSaving = this.mapper.map(dto, Saving.class);
 		mappedSaving.setUser(this.securityUtil.getCurrentUser());
@@ -40,6 +42,7 @@ public class SavingsService {
 		return ResponseEntity.ok(this.mapper.map(saved, SavingDto.class));
 	}
 
+	@Transactional
 	public ResponseEntity<MessageDto> deleteSavings(UUID savingId) {
 		User user = this.securityUtil.getCurrentUser();
 		Saving saving = this.interfaces.savings.findById(savingId)

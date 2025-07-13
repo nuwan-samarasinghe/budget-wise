@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SalaryService {
@@ -33,6 +34,7 @@ public class SalaryService {
 				.map(salary -> this.mapper.map(salary, SalaryDto.class)).toList());
 	}
 
+	@Transactional
 	public ResponseEntity<SalaryDto> createOrUpdateSalary(SalaryDto salaryDto) {
 		Salary mappedSalary = this.mapper.map(salaryDto, Salary.class);
 		mappedSalary.setUser(this.securityUtil.getCurrentUser());
@@ -40,6 +42,7 @@ public class SalaryService {
 		return ResponseEntity.ok(this.mapper.map(saved, SalaryDto.class));
 	}
 
+	@Transactional
 	public ResponseEntity<MessageDto> deleteSalary(UUID salaryId) {
 		User user = this.securityUtil.getCurrentUser();
 		Salary salary = this.interfaces.salary.findById(salaryId)

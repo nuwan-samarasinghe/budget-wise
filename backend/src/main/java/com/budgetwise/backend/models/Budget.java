@@ -22,7 +22,11 @@ public class Budget extends BaseModel {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
-	private BigDecimal limitAmount;
+	private BigDecimal amount;
+
+	private String source;
+
+	private String note;
 
 	@JsonBackReference
 	@ManyToOne
