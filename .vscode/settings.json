@@ -1,9 +1,21 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "java.debug.settings.onBuildFailureProceed": true,
-    "sonarlint.connectedMode.project": {
-        "connectionId": "nuwan-samarasinghe",
-        "projectKey": "budget-wise-backend"
-    }
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.debug.settings.onBuildFailureProceed": true,
+  "sonarlint.connectedMode.project": {
+    "connectionId": "nuwan-samarasinghe",
+    "projectKey": "budget-wise-backend"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "className\\s*:\\s*['\"]([^'\"]*)['\"]"
+    ]
+  ],
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.organizeImports": "always",
+    "source.sortMembers": "always",
+    "source.removeUnusedImports": true
+  }
 }
