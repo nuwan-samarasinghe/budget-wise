@@ -1,7 +1,7 @@
+import GlobalStyles from '@mui/material/GlobalStyles';
+import { StyledEngineProvider } from '@mui/material/styles';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { StyledEngineProvider } from '@mui/material/styles';
-import GlobalStyles from '@mui/material/GlobalStyles';
 import App from './App';
 import './index.css';
 

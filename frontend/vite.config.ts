@@ -4,15 +4,13 @@ import tailwindcss from 'tailwindcss';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react()
-  ],
+  plugins: [react()],
   css: {
-    postcss: { plugins: [tailwindcss()] }
+    postcss: { plugins: [tailwindcss()] },
   },
   server: {
     host: true,
     port: 5173,
-    watch: { usePolling: true }
+    watch: { usePolling: true },
   },
 });
