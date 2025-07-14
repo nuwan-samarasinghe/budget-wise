@@ -1,4 +1,11 @@
-import { AccountBalanceWallet, AttachMoney, Home, Logout, MoneyOff, Person } from '@mui/icons-material';
+import {
+  AccountBalanceWallet,
+  AttachMoney,
+  Home,
+  Logout,
+  MoneyOff,
+  Person,
+} from '@mui/icons-material';
 import {
   List,
   ListItemButton,
@@ -11,7 +18,11 @@ import { CustomNavLink } from './CustomNavLink';
 const items = [
   { to: '/', icon: <Home />, label: 'Dashboard' },
   { to: '/income', icon: <AttachMoney />, label: 'Income' },
-  { to: '/budget-planner', icon: <AccountBalanceWallet />, label: 'Budget Planner' },
+  {
+    to: '/budget-planner',
+    icon: <AccountBalanceWallet />,
+    label: 'Budget Planner',
+  },
   { to: '/expenses', icon: <MoneyOff />, label: 'Expenses' },
   { to: '/my-profile', icon: <Person />, label: 'My Profile' },
 ];
