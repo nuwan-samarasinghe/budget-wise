@@ -17,7 +17,7 @@ import { CustomNavLink } from './CustomNavLink';
 
 const items = [
   { to: '/', icon: <Home />, label: 'Dashboard' },
-  { to: '/income', icon: <AttachMoney />, label: 'Income' },
+  { to: '/income', icon: <AttachMoney />, label: 'My Income' },
   {
     to: '/budget-planner',
     icon: <AccountBalanceWallet />,

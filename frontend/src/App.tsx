@@ -4,8 +4,8 @@ import Layout from './components/Layout';
 import BudgetPage from './pages/BudgetPage';
 import ExpensePage from './pages/ExpensePage';
 import HomePage from './pages/HomePage';
+import IncomePage from './pages/IncomePage';
 import ProfilePage from './pages/ProfilePage';
-import SalaryPage from './pages/SalaryPage';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="my-profile" element={<ProfilePage />} />
-          <Route path="income" element={<SalaryPage />} />
+          <Route path="income" element={<IncomePage />} />
           <Route path="budget-planner" element={<BudgetPage />} />
           <Route path="expenses" element={<ExpensePage />} />
         </Route>
