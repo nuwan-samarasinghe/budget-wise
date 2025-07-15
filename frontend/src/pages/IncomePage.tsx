@@ -55,7 +55,10 @@ export default function IncomePage() {
     setPage(0);
   };
 
-  const shuffledColors = useMemo(() => shuffleArray(COLORS), [yearlyTrend.length]);
+  const shuffledColors = useMemo(
+    () => shuffleArray(COLORS),
+    [yearlyTrend.length],
+  );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
   const filteredData = initialIncomeData.filter((record) => {

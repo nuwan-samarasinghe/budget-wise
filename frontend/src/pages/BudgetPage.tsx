@@ -101,7 +101,10 @@ export default function BudgetPage() {
     page * rowsPerPage + rowsPerPage,
   );
 
-  const shuffledColors = useMemo(() => shuffleArray(COLORS), [yearlyBudgetTrend.length]);
+  const shuffledColors = useMemo(
+    () => shuffleArray(COLORS),
+    [yearlyBudgetTrend.length],
+  );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
   return (

@@ -24,7 +24,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from '@mui/material';
 
 import {
@@ -80,7 +80,10 @@ export default function HomePage() {
     { month: 'May', fixed: 1800, variable: 2400 },
   ];
 
-  const shuffledColors = useMemo(() => shuffleArray(COLORS), [topExpenses.length]);
+  const shuffledColors = useMemo(
+    () => shuffleArray(COLORS),
+    [topExpenses.length],
+  );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
   return (
@@ -95,7 +98,9 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Top 5 Expense Categories */}
           <div className="bg-white p-4 rounded-2xl shadow">
-            <Typography variant="h6" className="mb-2">Top 5 Expense Categories</Typography>
+            <Typography variant="h6" className="mb-2">
+              Top 5 Expense Categories
+            </Typography>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart layout="vertical" data={topExpenses}>
                 <XAxis type="number" tickFormatter={formatCurrency} />
@@ -103,7 +108,10 @@ export default function HomePage() {
                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                 <Bar dataKey="amount">
                   {topExpenses.map((_, index) => (
-                    <Cell key={`bar-${index}`} fill={shuffledColors[index % shuffledColors.length]} />
+                    <Cell
+                      key={`bar-${index}`}
+                      fill={shuffledColors[index % shuffledColors.length]}
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -112,7 +120,9 @@ export default function HomePage() {
 
           {/* Monthly Income vs Expense (Line Chart) */}
           <div className="bg-white p-4 rounded-2xl shadow">
-            <Typography variant="h6" className="mb-2">Monthly Income vs Expense</Typography>
+            <Typography variant="h6" className="mb-2">
+              Monthly Income vs Expense
+            </Typography>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -120,8 +130,18 @@ export default function HomePage() {
                 <YAxis tickFormatter={formatCurrency} />
                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                 <Legend />
-                <Line type="monotone" dataKey="income" stroke={fixedColor} name="Income" />
-                <Line type="monotone" dataKey="expense" stroke={variableColor} name="Expense" />
+                <Line
+                  type="monotone"
+                  dataKey="income"
+                  stroke={fixedColor}
+                  name="Income"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="expense"
+                  stroke={variableColor}
+                  name="Expense"
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -131,7 +151,9 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Fixed vs Variable Expenses */}
           <div className="bg-white p-4 rounded-2xl shadow">
-            <Typography variant="h6" className="mb-2">Fixed vs Variable Expenses</Typography>
+            <Typography variant="h6" className="mb-2">
+              Fixed vs Variable Expenses
+            </Typography>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={fixedVsVariable}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -139,15 +161,27 @@ export default function HomePage() {
                 <YAxis tickFormatter={formatCurrency} />
                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                 <Legend />
-                <Bar dataKey="fixed" stackId="a" fill={fixedColor} name="Fixed" />
-                <Bar dataKey="variable" stackId="a" fill={variableColor} name="Variable" />
+                <Bar
+                  dataKey="fixed"
+                  stackId="a"
+                  fill={fixedColor}
+                  name="Fixed"
+                />
+                <Bar
+                  dataKey="variable"
+                  stackId="a"
+                  fill={variableColor}
+                  name="Variable"
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           {/* Cash Flow Over Time */}
           <div className="bg-white p-4 rounded-2xl shadow">
-            <Typography variant="h6" className="mb-2">Cash Flow Over Time</Typography>
+            <Typography variant="h6" className="mb-2">
+              Cash Flow Over Time
+            </Typography>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -166,7 +200,9 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Budget vs Spent Pie Chart */}
           <div className="bg-white p-4 rounded-2xl shadow">
-            <Typography variant="h6" className="mb-2">Budget vs Spent</Typography>
+            <Typography variant="h6" className="mb-2">
+              Budget vs Spent
+            </Typography>
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
@@ -174,11 +210,16 @@ export default function HomePage() {
                   cx="50%"
                   cy="50%"
                   outerRadius={80}
-                  label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
+                  label={({ name, value }) =>
+                    `${name}: ${formatCurrency(value)}`
+                  }
                   dataKey="value"
                 >
                   {budgetData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={shuffledColors[index % shuffledColors.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={shuffledColors[index % shuffledColors.length]}
+                    />
                   ))}
                 </Pie>
                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
@@ -189,7 +230,9 @@ export default function HomePage() {
 
           {/* Expense Category Breakdown */}
           <div className="bg-white p-4 rounded-2xl shadow">
-            <Typography variant="h6" className="mb-2">Expense by Category</Typography>
+            <Typography variant="h6" className="mb-2">
+              Expense by Category
+            </Typography>
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
@@ -199,10 +242,15 @@ export default function HomePage() {
                   cx="50%"
                   cy="50%"
                   outerRadius={80}
-                  label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
+                  label={({ name, value }) =>
+                    `${name}: ${formatCurrency(value)}`
+                  }
                 >
                   {expenseCategories.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={shuffledColors[index % shuffledColors.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={shuffledColors[index % shuffledColors.length]}
+                    />
                   ))}
                 </Pie>
                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
@@ -214,14 +262,22 @@ export default function HomePage() {
 
         {/* Row 4: Recurring Subscriptions Table */}
         <div className="bg-white p-4 rounded-2xl shadow">
-          <Typography variant="h6" className="mb-2">Recurring Subscriptions</Typography>
+          <Typography variant="h6" className="mb-2">
+            Recurring Subscriptions
+          </Typography>
           <TableContainer>
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell><strong>Service</strong></TableCell>
-                  <TableCell><strong>Category</strong></TableCell>
-                  <TableCell><strong>Amount</strong></TableCell>
+                  <TableCell>
+                    <strong>Service</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Category</strong>
+                  </TableCell>
+                  <TableCell>
+                    <strong>Amount</strong>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

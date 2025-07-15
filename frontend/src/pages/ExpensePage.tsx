@@ -81,7 +81,10 @@ export default function ExpensePage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const shuffledColors = useMemo(() => shuffleArray(COLORS), [yearlyExpenseTrend.length]);
+  const shuffledColors = useMemo(
+    () => shuffleArray(COLORS),
+    [yearlyExpenseTrend.length],
+  );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
