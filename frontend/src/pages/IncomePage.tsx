@@ -9,8 +9,9 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { COLORS, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
 
 type IncomeRecord = {
   amount: number;
@@ -54,6 +55,9 @@ export default function IncomePage() {
     setPage(0);
   };
 
+  const shuffledColors = useMemo(() => shuffleArray(COLORS), [yearlyTrend.length]);
+  const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
+
   const filteredData = initialIncomeData.filter((record) => {
     return (
       record.amount.toString().includes(filters.amount) &&
@@ -90,7 +94,7 @@ export default function IncomePage() {
               <Line
                 type="monotone"
                 dataKey="amount"
-                stroke="#3B7A57"
+                stroke={fixedColor}
                 strokeWidth={2}
                 dot={false}
               />
@@ -110,7 +114,7 @@ export default function IncomePage() {
               <Line
                 type="monotone"
                 dataKey="amount"
-                stroke="#6A5ACD"
+                stroke={variableColor}
                 strokeWidth={2}
                 dot={false}
               />

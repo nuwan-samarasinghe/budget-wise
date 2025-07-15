@@ -1,10 +1,5 @@
 import { Edit } from '@mui/icons-material';
-import {
-  Avatar,
-  Button,
-  IconButton,
-  TextField,
-} from '@mui/material';
+import { Avatar, Button, IconButton, TextField } from '@mui/material';
 import { useRef, useState } from 'react';
 
 export default function ProfilePage() {
@@ -77,7 +72,9 @@ export default function ProfilePage() {
           />
         ) : (
           <div className="flex items-center justify-between max-w-md">
-            <span className="text-lg font-medium text-gray-700">{fullName}</span>
+            <span className="text-lg font-medium text-gray-700">
+              {fullName}
+            </span>
             <IconButton onClick={handleNameEdit}>
               <Edit fontSize="small" />
             </IconButton>
@@ -87,7 +84,9 @@ export default function ProfilePage() {
 
       {/* Change Password Section */}
       <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Change Password</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Change Password
+        </h2>
         <div className="space-y-4 max-w-md">
           <TextField
             fullWidth
@@ -116,7 +115,9 @@ export default function ProfilePage() {
               color="primary"
               className="!rounded-xl"
               disabled={
-                !passwords.current || !passwords.new || passwords.new !== passwords.confirm
+                !passwords.current ||
+                !passwords.new ||
+                passwords.new !== passwords.confirm
               }
               onClick={() => alert('Password changed (mock action)')}
             >

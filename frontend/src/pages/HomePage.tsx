@@ -1,3 +1,6 @@
+'use client';
+
+import { useMemo } from 'react';
 import {
   Bar,
   BarChart,
@@ -13,6 +16,23 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material';
+
+import {
+  COLORS,
+  formatCurrency,
+  getTwoRandomItems,
+  shuffleArray,
+} from '../commons/GraphsUtil';
 
 export default function HomePage() {
   const monthlyData = [
@@ -46,10 +66,10 @@ export default function HomePage() {
   ];
 
   const recurringSubscriptions = [
-    { name: 'Netflix', amount: 12.99 },
-    { name: 'Spotify', amount: 9.99 },
-    { name: 'Gym Membership', amount: 35.0 },
-    { name: 'iCloud Storage', amount: 2.49 },
+    { name: 'Netflix', amount: 12.99, category: 'Entertainment' },
+    { name: 'Spotify', amount: 9.99, category: 'Music' },
+    { name: 'Gym Membership', amount: 35.0, category: 'Fitness' },
+    { name: 'iCloud Storage', amount: 2.49, category: 'Storage' },
   ];
 
   const fixedVsVariable = [
@@ -60,194 +80,161 @@ export default function HomePage() {
     { month: 'May', fixed: 1800, variable: 2400 },
   ];
 
-  const COLORS = [
-    '#6A5ACD',
-    '#4DB6AC',
-    '#BA68C8',
-    '#FFD54F',
-    '#FF8A65',
-    '#90CAF9',
-  ];
-
-  const formatCurrency = (value: number) =>
-    new Intl.NumberFormat('en-GB', {
-      style: 'currency',
-      currency: 'GBP',
-      minimumFractionDigits: 0,
-    }).format(value);
+  const shuffledColors = useMemo(() => shuffleArray(COLORS), [topExpenses.length]);
+  const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
   return (
     <div className="p-4">
       {/* Dashboard Heading */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Finance Dashboard</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
-        <div className="bg-white p-4 rounded-2xl shadow">
-          <h2 className="text-xl font-semibold mb-2">
-            Top 5 Expense Categories
-          </h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart layout="vertical" data={topExpenses}>
-              <XAxis type="number" tickFormatter={formatCurrency} />
-              <YAxis type="category" dataKey="category" />
-              <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-              <Bar dataKey="amount">
-                {topExpenses.map((_, index) => (
-                  <Cell
-                    key={`bar-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+      <div className="space-y-6 p-4">
+        {/* Row 1: Top Expenses + Monthly Line Chart */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Top 5 Expense Categories */}
+          <div className="bg-white p-4 rounded-2xl shadow">
+            <Typography variant="h6" className="mb-2">Top 5 Expense Categories</Typography>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart layout="vertical" data={topExpenses}>
+                <XAxis type="number" tickFormatter={formatCurrency} />
+                <YAxis type="category" dataKey="category" />
+                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                <Bar dataKey="amount">
+                  {topExpenses.map((_, index) => (
+                    <Cell key={`bar-${index}`} fill={shuffledColors[index % shuffledColors.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-        {/* Recurring Subscriptions Table */}
-        <div className="bg-white p-4 rounded-2xl shadow">
-          <h2 className="text-xl font-semibold mb-2">
-            Recurring Subscriptions
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left border-b border-gray-200">
-                  <th className="py-2">Service</th>
-                  <th className="py-2">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recurringSubscriptions.map((item, index) => (
-                  <tr key={index} className="border-b border-gray-100">
-                    <td className="py-2">{item.name}</td>
-                    <td className="py-2">{formatCurrency(item.amount)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          {/* Monthly Income vs Expense (Line Chart) */}
+          <div className="bg-white p-4 rounded-2xl shadow">
+            <Typography variant="h6" className="mb-2">Monthly Income vs Expense</Typography>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={monthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis tickFormatter={formatCurrency} />
+                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                <Legend />
+                <Line type="monotone" dataKey="income" stroke={fixedColor} name="Income" />
+                <Line type="monotone" dataKey="expense" stroke={variableColor} name="Expense" />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Fixed vs Variable Expenses Chart */}
-        <div className="bg-white p-4 rounded-2xl shadow col-span-1 md:col-span-2">
-          <h2 className="text-xl font-semibold mb-2">
-            Fixed vs Variable Expenses
-          </h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={fixedVsVariable}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis tickFormatter={formatCurrency} />
-              <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-              <Legend />
-              <Bar dataKey="fixed" stackId="a" fill="#4A4A4A" name="Fixed" />
-              <Bar
-                dataKey="variable"
-                stackId="a"
-                fill="#A0522D"
-                name="Variable"
-              />
-            </BarChart>
-          </ResponsiveContainer>
+        {/* Row 2: Fixed vs Variable + Cash Flow */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Fixed vs Variable Expenses */}
+          <div className="bg-white p-4 rounded-2xl shadow">
+            <Typography variant="h6" className="mb-2">Fixed vs Variable Expenses</Typography>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={fixedVsVariable}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis tickFormatter={formatCurrency} />
+                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                <Legend />
+                <Bar dataKey="fixed" stackId="a" fill={fixedColor} name="Fixed" />
+                <Bar dataKey="variable" stackId="a" fill={variableColor} name="Variable" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Cash Flow Over Time */}
+          <div className="bg-white p-4 rounded-2xl shadow">
+            <Typography variant="h6" className="mb-2">Cash Flow Over Time</Typography>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={monthlyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis tickFormatter={formatCurrency} />
+                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                <Legend />
+                <Bar dataKey="income" fill={fixedColor} name="Income" />
+                <Bar dataKey="expense" fill={variableColor} name="Expense" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        {/* Income vs Expense Line Chart */}
+        {/* Row 3: Budget vs Spent + Category Breakdown */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Budget vs Spent Pie Chart */}
+          <div className="bg-white p-4 rounded-2xl shadow">
+            <Typography variant="h6" className="mb-2">Budget vs Spent</Typography>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={budgetData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
+                  dataKey="value"
+                >
+                  {budgetData.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={shuffledColors[index % shuffledColors.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Expense Category Breakdown */}
+          <div className="bg-white p-4 rounded-2xl shadow">
+            <Typography variant="h6" className="mb-2">Expense by Category</Typography>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={expenseCategories}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
+                >
+                  {expenseCategories.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={shuffledColors[index % shuffledColors.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Row 4: Recurring Subscriptions Table */}
         <div className="bg-white p-4 rounded-2xl shadow">
-          <h2 className="text-xl font-semibold mb-2">
-            Monthly Income vs Expense
-          </h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis tickFormatter={formatCurrency} />
-              <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="income"
-                stroke="#3B7A57"
-                name="Income"
-              />
-              <Line
-                type="monotone"
-                dataKey="expense"
-                stroke="#8B0000"
-                name="Expense"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Budget vs Spent Pie Chart */}
-        <div className="bg-white p-4 rounded-2xl shadow">
-          <h2 className="text-xl font-semibold mb-2">Budget vs Spent</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie
-                data={budgetData}
-                cx="50%"
-                cy="50%"
-                outerRadius={80}
-                label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
-                dataKey="value"
-              >
-                {budgetData.map((_, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
+          <Typography variant="h6" className="mb-2">Recurring Subscriptions</Typography>
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell><strong>Service</strong></TableCell>
+                  <TableCell><strong>Category</strong></TableCell>
+                  <TableCell><strong>Amount</strong></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {recurringSubscriptions.map((item, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.category}</TableCell>
+                    <TableCell>{formatCurrency(item.amount)}</TableCell>
+                  </TableRow>
                 ))}
-              </Pie>
-              <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Cash Flow Bar Chart */}
-        <div className="bg-white p-4 rounded-2xl shadow col-span-1 md:col-span-2">
-          <h2 className="text-xl font-semibold mb-2">Cash Flow Over Time</h2>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={monthlyData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis tickFormatter={formatCurrency} />
-              <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-              <Legend />
-              <Bar dataKey="income" fill="#3B7A57" name="Income" />
-              <Bar dataKey="expense" fill="#8B0000" name="Expense" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Expense Category Breakdown */}
-        <div className="bg-white p-4 rounded-2xl shadow col-span-1 md:col-span-2">
-          <h2 className="text-xl font-semibold mb-2">Expense by Category</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={expenseCategories}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
-              >
-                {expenseCategories.map((_, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       </div>
     </div>

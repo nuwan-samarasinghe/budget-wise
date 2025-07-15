@@ -16,7 +16,7 @@ import type { MouseEventHandler } from 'react';
 import { CustomNavLink } from './CustomNavLink';
 
 const items = [
-  { to: '/', icon: <Home />, label: 'Dashboard' },
+  { to: '/', icon: <Home />, label: 'Finance Dashboard' },
   { to: '/income', icon: <AttachMoney />, label: 'My Income' },
   {
     to: '/budget-planner',

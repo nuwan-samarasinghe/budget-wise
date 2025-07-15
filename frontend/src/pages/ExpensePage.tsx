@@ -9,13 +9,9 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
-import {
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts';
+import { useMemo, useState } from 'react';
+import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { COLORS, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
 
 type ExpenseRecord = {
   amount: number;
@@ -25,11 +21,36 @@ type ExpenseRecord = {
 };
 
 const initialExpenseData: ExpenseRecord[] = [
-  { amount: 400, source: 'Rent', note: 'Monthly flat rent', category: 'Housing' },
-  { amount: 120, source: 'Groceries', note: 'Weekly groceries', category: 'Food' },
-  { amount: 80, source: 'Netflix', note: 'Streaming service', category: 'Leisure' },
-  { amount: 60, source: 'Uber', note: 'Weekend transport', category: 'Transport' },
-  { amount: 90, source: 'Electricity', note: 'Monthly bill', category: 'Bills' },
+  {
+    amount: 400,
+    source: 'Rent',
+    note: 'Monthly flat rent',
+    category: 'Housing',
+  },
+  {
+    amount: 120,
+    source: 'Groceries',
+    note: 'Weekly groceries',
+    category: 'Food',
+  },
+  {
+    amount: 80,
+    source: 'Netflix',
+    note: 'Streaming service',
+    category: 'Leisure',
+  },
+  {
+    amount: 60,
+    source: 'Uber',
+    note: 'Weekend transport',
+    category: 'Transport',
+  },
+  {
+    amount: 90,
+    source: 'Electricity',
+    note: 'Monthly bill',
+    category: 'Bills',
+  },
   { amount: 50, source: 'Gym', note: 'Membership fee', category: 'Health' },
 ];
 
@@ -51,9 +72,17 @@ const yearlyExpenseTrend = [
 ];
 
 export default function ExpensePage() {
-  const [filters, setFilters] = useState({ amount: '', source: '', note: '', category: '' });
+  const [filters, setFilters] = useState({
+    amount: '',
+    source: '',
+    note: '',
+    category: '',
+  });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const shuffledColors = useMemo(() => shuffleArray(COLORS), [yearlyExpenseTrend.length]);
+  const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
     setFilters({ ...filters, [field]: value });
@@ -64,12 +93,16 @@ export default function ExpensePage() {
     return (
       record.amount.toString().includes(filters.amount) &&
       record.source.toLowerCase().includes(filters.source.toLowerCase()) &&
-      (record.note?.toLowerCase().includes(filters.note.toLowerCase()) ?? true) &&
+      (record.note?.toLowerCase().includes(filters.note.toLowerCase()) ??
+        true) &&
       record.category.toLowerCase().includes(filters.category.toLowerCase())
     );
   });
 
-  const paginatedData = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedData = filteredData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
 
   return (
     <div className="p-4">
@@ -83,13 +116,21 @@ export default function ExpensePage() {
         {/* Last Month */}
         <div className="bg-white rounded-xl shadow p-4">
           <div className="flex justify-between items-center mb-1">
-            <span className="text-sm font-medium text-gray-600">Last Month Expense</span>
+            <span className="text-sm font-medium text-gray-600">
+              Last Month Expense
+            </span>
             <span className="text-red-600 font-semibold">£930</span>
           </div>
           <ResponsiveContainer width="100%" height={50}>
             <LineChart data={monthlyExpenseTrend}>
               <Tooltip />
-              <Line type="monotone" dataKey="amount" stroke="#E53935" strokeWidth={2} dot={false} />
+              <Line
+                type="monotone"
+                dataKey="amount"
+                stroke={fixedColor}
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -97,13 +138,21 @@ export default function ExpensePage() {
         {/* This Year */}
         <div className="bg-white rounded-xl shadow p-4">
           <div className="flex justify-between items-center mb-1">
-            <span className="text-sm font-medium text-gray-600">This Year Expense</span>
+            <span className="text-sm font-medium text-gray-600">
+              This Year Expense
+            </span>
             <span className="text-red-600 font-semibold">£11,150</span>
           </div>
           <ResponsiveContainer width="100%" height={50}>
             <LineChart data={yearlyExpenseTrend}>
               <Tooltip />
-              <Line type="monotone" dataKey="amount" stroke="#BA68C8" strokeWidth={2} dot={false} />
+              <Line
+                type="monotone"
+                dataKey="amount"
+                stroke={variableColor}
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -158,15 +207,25 @@ export default function ExpensePage() {
                   variant="standard"
                   size="small"
                   value={filters.category}
-                  onChange={(e) => handleFilterChange('category', e.target.value)}
+                  onChange={(e) =>
+                    handleFilterChange('category', e.target.value)
+                  }
                 />
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell className="font-semibold text-gray-700">Amount</TableCell>
-              <TableCell className="font-semibold text-gray-700">Source</TableCell>
-              <TableCell className="font-semibold text-gray-700">Note</TableCell>
-              <TableCell className="font-semibold text-gray-700">Category</TableCell>
+              <TableCell className="font-semibold text-gray-700">
+                Amount
+              </TableCell>
+              <TableCell className="font-semibold text-gray-700">
+                Source
+              </TableCell>
+              <TableCell className="font-semibold text-gray-700">
+                Note
+              </TableCell>
+              <TableCell className="font-semibold text-gray-700">
+                Category
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -183,7 +242,10 @@ export default function ExpensePage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-gray-500 py-4">
+                <TableCell
+                  colSpan={4}
+                  className="text-center text-gray-500 py-4"
+                >
                   No records found.
                 </TableCell>
               </TableRow>
