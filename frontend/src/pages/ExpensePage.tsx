@@ -122,7 +122,7 @@ export default function ExpensePage() {
             <span className="text-sm font-medium text-gray-600">
               Last Month Expense
             </span>
-            <span className="text-red-600 font-semibold">£930</span>
+            <span className="text-red-700 font-semibold">£930</span>
           </div>
           <ResponsiveContainer width="100%" height={50}>
             <LineChart data={monthlyExpenseTrend}>
@@ -144,7 +144,7 @@ export default function ExpensePage() {
             <span className="text-sm font-medium text-gray-600">
               This Year Expense
             </span>
-            <span className="text-red-600 font-semibold">£11,150</span>
+            <span className="text-red-700 font-semibold">£11,150</span>
           </div>
           <ResponsiveContainer width="100%" height={50}>
             <LineChart data={yearlyExpenseTrend}>
@@ -166,7 +166,7 @@ export default function ExpensePage() {
         <Button
           variant="contained"
           color="primary"
-          className="!rounded-xl !bg-brand-600 hover:!bg-brand-700"
+          className="!rounded-xl !bg-red-600 hover:!bg-red-700"
         >
           + Add Expense
         </Button>
@@ -235,7 +235,7 @@ export default function ExpensePage() {
             {paginatedData.length > 0 ? (
               paginatedData.map((item, idx) => (
                 <TableRow key={idx} hover>
-                  <TableCell className="text-red-600 font-medium">
+                  <TableCell className="text-red-700 font-medium">
                     £{item.amount.toLocaleString('en-GB')}
                   </TableCell>
                   <TableCell>{item.source}</TableCell>

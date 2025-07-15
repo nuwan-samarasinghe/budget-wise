@@ -122,7 +122,7 @@ export default function BudgetPage() {
             <span className="text-sm font-medium text-gray-600">
               Last Month Budget
             </span>
-            <span className="text-blue-700 font-semibold">£700</span>
+            <span className="text-brand-700 font-semibold">£700</span>
           </div>
           <ResponsiveContainer width="100%" height={50}>
             <LineChart data={monthlyBudgetTrend}>
@@ -144,7 +144,7 @@ export default function BudgetPage() {
             <span className="text-sm font-medium text-gray-600">
               This Year Budget
             </span>
-            <span className="text-blue-700 font-semibold">£6,800</span>
+            <span className="text-brand-700 font-semibold">£6,800</span>
           </div>
           <ResponsiveContainer width="100%" height={50}>
             <LineChart data={yearlyBudgetTrend}>
@@ -235,7 +235,7 @@ export default function BudgetPage() {
             {paginatedData.length > 0 ? (
               paginatedData.map((item, idx) => (
                 <TableRow key={idx} hover>
-                  <TableCell className="text-blue-800 font-medium">
+                  <TableCell className="text-brand-700 font-medium">
                     £{item.amount.toLocaleString('en-GB')}
                   </TableCell>
                   <TableCell>{item.source}</TableCell>
