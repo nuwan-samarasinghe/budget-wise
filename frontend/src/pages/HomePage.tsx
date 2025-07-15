@@ -15,7 +15,6 @@ import {
 } from 'recharts';
 
 export default function HomePage() {
-
   const monthlyData = [
     { month: 'Jan', income: 5000, expense: 3200 },
     { month: 'Feb', income: 5200, expense: 3100 },
@@ -49,7 +48,7 @@ export default function HomePage() {
   const recurringSubscriptions = [
     { name: 'Netflix', amount: 12.99 },
     { name: 'Spotify', amount: 9.99 },
-    { name: 'Gym Membership', amount: 35.00 },
+    { name: 'Gym Membership', amount: 35.0 },
     { name: 'iCloud Storage', amount: 2.49 },
   ];
 
@@ -61,8 +60,14 @@ export default function HomePage() {
     { month: 'May', fixed: 1800, variable: 2400 },
   ];
 
-
-  const COLORS = ['#6A5ACD', '#4DB6AC', '#BA68C8', '#FFD54F', '#FF8A65', '#90CAF9'];
+  const COLORS = [
+    '#6A5ACD',
+    '#4DB6AC',
+    '#BA68C8',
+    '#FFD54F',
+    '#FF8A65',
+    '#90CAF9',
+  ];
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat('en-GB', {
@@ -80,7 +85,9 @@ export default function HomePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
         <div className="bg-white p-4 rounded-2xl shadow">
-          <h2 className="text-xl font-semibold mb-2">Top 5 Expense Categories</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Top 5 Expense Categories
+          </h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart layout="vertical" data={topExpenses}>
               <XAxis type="number" tickFormatter={formatCurrency} />
@@ -88,7 +95,10 @@ export default function HomePage() {
               <Tooltip formatter={(value) => formatCurrency(Number(value))} />
               <Bar dataKey="amount">
                 {topExpenses.map((_, index) => (
-                  <Cell key={`bar-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={`bar-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Bar>
             </BarChart>
@@ -97,7 +107,9 @@ export default function HomePage() {
 
         {/* Recurring Subscriptions Table */}
         <div className="bg-white p-4 rounded-2xl shadow">
-          <h2 className="text-xl font-semibold mb-2">Recurring Subscriptions</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Recurring Subscriptions
+          </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -120,7 +132,9 @@ export default function HomePage() {
 
         {/* Fixed vs Variable Expenses Chart */}
         <div className="bg-white p-4 rounded-2xl shadow col-span-1 md:col-span-2">
-          <h2 className="text-xl font-semibold mb-2">Fixed vs Variable Expenses</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Fixed vs Variable Expenses
+          </h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={fixedVsVariable}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -129,14 +143,21 @@ export default function HomePage() {
               <Tooltip formatter={(value) => formatCurrency(Number(value))} />
               <Legend />
               <Bar dataKey="fixed" stackId="a" fill="#4A4A4A" name="Fixed" />
-              <Bar dataKey="variable" stackId="a" fill="#A0522D" name="Variable" />
+              <Bar
+                dataKey="variable"
+                stackId="a"
+                fill="#A0522D"
+                name="Variable"
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Income vs Expense Line Chart */}
         <div className="bg-white p-4 rounded-2xl shadow">
-          <h2 className="text-xl font-semibold mb-2">Monthly Income vs Expense</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Monthly Income vs Expense
+          </h2>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -144,8 +165,18 @@ export default function HomePage() {
               <YAxis tickFormatter={formatCurrency} />
               <Tooltip formatter={(value) => formatCurrency(Number(value))} />
               <Legend />
-              <Line type="monotone" dataKey="income" stroke="#3B7A57" name="Income" />
-              <Line type="monotone" dataKey="expense" stroke="#8B0000" name="Expense" />
+              <Line
+                type="monotone"
+                dataKey="income"
+                stroke="#3B7A57"
+                name="Income"
+              />
+              <Line
+                type="monotone"
+                dataKey="expense"
+                stroke="#8B0000"
+                name="Expense"
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -164,7 +195,10 @@ export default function HomePage() {
                 dataKey="value"
               >
                 {budgetData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip formatter={(value) => formatCurrency(Number(value))} />
@@ -204,7 +238,10 @@ export default function HomePage() {
                 label={({ name, value }) => `${name}: ${formatCurrency(value)}`}
               >
                 {expenseCategories.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip formatter={(value) => formatCurrency(Number(value))} />

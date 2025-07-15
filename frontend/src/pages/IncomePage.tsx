@@ -10,12 +10,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useState } from 'react';
-import {
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts';
+import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 type IncomeRecord = {
   amount: number;
@@ -67,7 +62,10 @@ export default function IncomePage() {
     );
   });
 
-  const paginatedData = filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedData = filteredData.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
 
   return (
     <div className="p-4">
@@ -81,13 +79,21 @@ export default function IncomePage() {
         {/* Last Month */}
         <div className="bg-white rounded-xl shadow p-4">
           <div className="flex justify-between items-center mb-1">
-            <span className="text-sm font-medium text-gray-600">Last Month</span>
+            <span className="text-sm font-medium text-gray-600">
+              Last Month
+            </span>
             <span className="text-green-700 font-semibold">£1,500</span>
           </div>
           <ResponsiveContainer width="100%" height={50}>
             <LineChart data={monthlyTrend}>
               <Tooltip />
-              <Line type="monotone" dataKey="amount" stroke="#3B7A57" strokeWidth={2} dot={false} />
+              <Line
+                type="monotone"
+                dataKey="amount"
+                stroke="#3B7A57"
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -101,7 +107,13 @@ export default function IncomePage() {
           <ResponsiveContainer width="100%" height={50}>
             <LineChart data={yearlyTrend}>
               <Tooltip />
-              <Line type="monotone" dataKey="amount" stroke="#6A5ACD" strokeWidth={2} dot={false} />
+              <Line
+                type="monotone"
+                dataKey="amount"
+                stroke="#6A5ACD"
+                strokeWidth={2}
+                dot={false}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -152,9 +164,15 @@ export default function IncomePage() {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell className="font-semibold text-gray-700">Amount</TableCell>
-              <TableCell className="font-semibold text-gray-700">Source</TableCell>
-              <TableCell className="font-semibold text-gray-700">Note</TableCell>
+              <TableCell className="font-semibold text-gray-700">
+                Amount
+              </TableCell>
+              <TableCell className="font-semibold text-gray-700">
+                Source
+              </TableCell>
+              <TableCell className="font-semibold text-gray-700">
+                Note
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -170,7 +188,10 @@ export default function IncomePage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3} className="text-center text-gray-500 py-4">
+                <TableCell
+                  colSpan={3}
+                  className="text-center text-gray-500 py-4"
+                >
                   No records found.
                 </TableCell>
               </TableRow>
