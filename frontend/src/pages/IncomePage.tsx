@@ -18,16 +18,46 @@ export type IncomeRecord = {
   amount: number;
   source: string;
   note?: string;
-  salaryMonth?: string;
+  salaryMonth: string;
 };
 
 const initialIncomeData: IncomeRecord[] = [
-  { amount: 1200, source: 'Salary', note: 'June payment', salaryMonth: '2024-06' },
-  { amount: 200, source: 'Freelancing', note: 'Logo design', salaryMonth: '2024-06' },
-  { amount: 50, source: 'Interest', note: 'Bank savings', salaryMonth: '2024-05' },
-  { amount: 100, source: 'Gift', note: 'Birthday gift', salaryMonth: '2024-04' },
-  { amount: 90, source: 'Interest', note: 'Quarterly interest', salaryMonth: '2024-03' },
-  { amount: 400, source: 'Bonus', note: 'Quarterly bonus', salaryMonth: '2024-03' },
+  {
+    amount: 1200,
+    source: 'Salary',
+    note: 'June payment',
+    salaryMonth: '2024-06',
+  },
+  {
+    amount: 200,
+    source: 'Freelancing',
+    note: 'Logo design',
+    salaryMonth: '2024-06',
+  },
+  {
+    amount: 50,
+    source: 'Interest',
+    note: 'Bank savings',
+    salaryMonth: '2024-05',
+  },
+  {
+    amount: 100,
+    source: 'Gift',
+    note: 'Birthday gift',
+    salaryMonth: '2024-04',
+  },
+  {
+    amount: 90,
+    source: 'Interest',
+    note: 'Quarterly interest',
+    salaryMonth: '2024-03',
+  },
+  {
+    amount: 400,
+    source: 'Bonus',
+    note: 'Quarterly bonus',
+    salaryMonth: '2024-03',
+  },
 ];
 
 const monthlyTrend = [
@@ -48,7 +78,12 @@ const yearlyTrend = [
 ];
 
 export default function IncomePage() {
-  const [filters, setFilters] = useState({ amount: '', source: '', note: '', salaryMonth: '' });
+  const [filters, setFilters] = useState({
+    amount: '',
+    source: '',
+    note: '',
+    salaryMonth: '',
+  });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -77,7 +112,9 @@ export default function IncomePage() {
   );
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedIncome, setSelectedIncome] = useState<IncomeRecord | null>(null);
+  const [selectedIncome, setSelectedIncome] = useState<IncomeRecord | null>(
+    null,
+  );
 
   const handleEdit = (row: IncomeRecord) => {
     setSelectedIncome(row);
@@ -131,7 +168,9 @@ export default function IncomePage() {
           {/* This Year */}
           <div className="bg-white rounded-xl shadow p-4">
             <div className="flex justify-between items-center mb-1">
-              <span className="text-sm font-medium text-gray-600">This Year</span>
+              <span className="text-sm font-medium text-gray-600">
+                This Year
+              </span>
               <span className="text-green-700 font-semibold">£29,800</span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
@@ -172,7 +211,9 @@ export default function IncomePage() {
                     variant="standard"
                     size="small"
                     value={filters.amount}
-                    onChange={(e) => handleFilterChange('amount', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange('amount', e.target.value)
+                    }
                   />
                 </TableCell>
                 <TableCell>
@@ -181,7 +222,9 @@ export default function IncomePage() {
                     variant="standard"
                     size="small"
                     value={filters.source}
-                    onChange={(e) => handleFilterChange('source', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange('source', e.target.value)
+                    }
                   />
                 </TableCell>
                 <TableCell>
@@ -221,7 +264,12 @@ export default function IncomePage() {
             <TableBody>
               {paginatedData.length > 0 ? (
                 paginatedData.map((item, idx) => (
-                  <TableRow key={idx} hover onClick={() => handleEdit(item)} className="cursor-pointer">
+                  <TableRow
+                    key={idx}
+                    hover
+                    onClick={() => handleEdit(item)}
+                    className="cursor-pointer"
+                  >
                     <TableCell className="text-green-700 font-medium">
                       £{item.amount.toLocaleString('en-GB')}
                     </TableCell>
