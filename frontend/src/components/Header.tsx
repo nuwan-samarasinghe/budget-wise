@@ -2,6 +2,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import {
   Avatar,
+  Box,
   ListItemIcon,
   Menu,
   MenuItem,
@@ -9,6 +10,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logoIcon from '../assets/logo.svg';
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -29,20 +31,25 @@ export default function Header() {
   };
 
   const handleLogout = () => {
-    // Implement logout logic here
     console.log('Logout clicked');
     handleMenuClose();
   };
 
   return (
-    <div className="flex items-center justify-between w-full">
-      <Typography variant="h6" className="text-brand-100" component="div">
-        BUDGET WISE
-      </Typography>
-      <div className="flex items-center space-x-4">
+    <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
+      {/* Logo and title */}
+      <Box display="flex" alignItems="center" gap={1}>
+        <img src={logoIcon} alt="Logo" style={{ height: 32 }} />
+        <Typography variant="h6" color="common.white" fontWeight="bold">
+          BUDGET WISE
+        </Typography>
+      </Box>
+
+      {/* Avatar and menu */}
+      <Box display="flex" alignItems="center" gap={2}>
         <Avatar
           src="/profile.jpg"
-          className="border-2 border-brand-500 cursor-pointer"
+          sx={{ border: '2px solid #4ade80', cursor: 'pointer' }}
           onClick={handleMenuOpen}
         />
         <Menu
@@ -65,7 +72,7 @@ export default function Header() {
             Logout
           </MenuItem>
         </Menu>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
