@@ -1,10 +1,10 @@
 export type AuthState = {
-    isAuthenticated: boolean;
-    loading: boolean;
-    error: string | null;
-}
+  isAuthenticated: boolean;
+  loading: boolean;
+  error: string | null;
+};
 
 export type Auth = {
-    username: string,
-    password: string
-}
+  username: string;
+  password: string;
+};

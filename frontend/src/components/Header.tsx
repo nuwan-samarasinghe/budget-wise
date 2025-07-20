@@ -36,7 +36,12 @@ export default function Header() {
   };
 
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      width="100%"
+    >
       {/* Logo and title */}
       <Box display="flex" alignItems="center" gap={1}>
         <img src={logoIcon} alt="Logo" style={{ height: 32 }} />

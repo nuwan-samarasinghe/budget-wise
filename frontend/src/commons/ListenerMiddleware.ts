@@ -1,5 +1,9 @@
 // src/app/listenerMiddleware.ts
-import { createListenerMiddleware, isRejected, type MiddlewareAPI } from '@reduxjs/toolkit';
+import {
+  createListenerMiddleware,
+  isRejected,
+  type MiddlewareAPI,
+} from '@reduxjs/toolkit';
 import { showNotification } from '../feature/notification/notificationSlice';
 
 export const ListenerMiddleware = createListenerMiddleware();
@@ -9,9 +13,8 @@ ListenerMiddleware.startListening({
   effect: async (action, listenerApi: MiddlewareAPI) => {
     const message =
       (action.payload as string) ||
-      action.error?.message || 'Something went wrong';
-    listenerApi.dispatch(
-      showNotification({ message, type: 'error' })
-    );
+      action.error?.message ||
+      'Something went wrong';
+    listenerApi.dispatch(showNotification({ message, type: 'error' }));
   },
 });
