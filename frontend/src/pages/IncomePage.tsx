@@ -14,9 +14,19 @@ import {
 } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { COLORS, formatCurrency, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
+import {
+  COLORS,
+  formatCurrency,
+  getTwoRandomItems,
+  shuffleArray,
+} from '../commons/GraphsUtil';
 import IncomeDialog from '../components/IncomeDialogBox';
-import { fetchIncome, fetchMonthlyIncome, fetchYearlyIncome, insertIncome } from '../feature/income/incomeSlice';
+import {
+  fetchIncome,
+  fetchMonthlyIncome,
+  fetchYearlyIncome,
+  insertIncome,
+} from '../feature/income/incomeSlice';
 import type { Income } from '../feature/income/incomeTypes';
 import { useAppDispatch, useAppSelector } from '../hooks';
 
@@ -64,9 +74,7 @@ export default function IncomePage() {
   );
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedIncome, setSelectedIncome] = useState<Income | null>(
-    null,
-  );
+  const [selectedIncome, setSelectedIncome] = useState<Income | null>(null);
 
   const handleEdit = (row: Income) => {
     setSelectedIncome(row);
@@ -86,7 +94,7 @@ export default function IncomePage() {
           setSelectedIncome(null);
         }}
         onSave={(data: Income) => {
-          dispatch(insertIncome(data))
+          dispatch(insertIncome(data));
           dispatch(fetchMonthlyIncome());
           dispatch(fetchYearlyIncome());
         }}
@@ -105,10 +113,14 @@ export default function IncomePage() {
               <span className="text-sm font-medium text-gray-600">
                 Monthly Income Trend
               </span>
-              <span className="text-green-700 font-semibold">{formatCurrency(incomeData.monthlyIncomeSummmary.reduce(
-                (sum, entry) => sum + entry.amount,
-                0
-              ))}</span>
+              <span className="text-green-700 font-semibold">
+                {formatCurrency(
+                  incomeData.monthlyIncomeSummmary.reduce(
+                    (sum, entry) => sum + entry.amount,
+                    0,
+                  ),
+                )}
+              </span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
               <LineChart data={incomeData.monthlyIncomeSummmary}>
@@ -129,10 +141,14 @@ export default function IncomePage() {
               <span className="text-sm font-medium text-gray-600">
                 Yearly Trend
               </span>
-              <span className="text-green-700 font-semibold">{formatCurrency(incomeData.yearlyIncomeSummmary.reduce(
-                (sum, entry) => sum + entry.amount,
-                0
-              ))}</span>
+              <span className="text-green-700 font-semibold">
+                {formatCurrency(
+                  incomeData.yearlyIncomeSummmary.reduce(
+                    (sum, entry) => sum + entry.amount,
+                    0,
+                  ),
+                )}
+              </span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
               <LineChart data={incomeData.yearlyIncomeSummmary}>

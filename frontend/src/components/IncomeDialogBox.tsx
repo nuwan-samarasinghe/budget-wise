@@ -43,7 +43,13 @@ export default function IncomeDialog({
         note: initialData.note || '',
       });
     } else {
-      setFormData({ id: '', amount: '', source: '', salaryMonth: '', note: '' });
+      setFormData({
+        id: '',
+        amount: '',
+        source: '',
+        salaryMonth: '',
+        note: '',
+      });
     }
   }, [initialData, open]);
 

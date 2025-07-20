@@ -14,9 +14,19 @@ import {
 } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { COLORS, formatCurrency, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
+import {
+  COLORS,
+  formatCurrency,
+  getTwoRandomItems,
+  shuffleArray,
+} from '../commons/GraphsUtil';
 import ExpenseDialog from '../components/ExpenseDialogBox';
-import { fetchExpense, fetchMonthlyExpense, fetchYearlyExpense, insertExpense } from '../feature/expense/expenseSlice';
+import {
+  fetchExpense,
+  fetchMonthlyExpense,
+  fetchYearlyExpense,
+  insertExpense,
+} from '../feature/expense/expenseSlice';
 import type { Expense } from '../feature/expense/expenseTypes';
 import { useAppDispatch, useAppSelector } from '../hooks';
 
@@ -66,9 +76,7 @@ export default function ExpensePage() {
   );
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedBudget, setSelectedBudget] = useState<Expense | null>(
-    null,
-  );
+  const [selectedBudget, setSelectedBudget] = useState<Expense | null>(null);
 
   const handleEdit = (row: Expense) => {
     setSelectedBudget(row);
@@ -88,7 +96,7 @@ export default function ExpensePage() {
           setSelectedBudget(null);
         }}
         onSave={(data) => {
-          dispatch(insertExpense(data))
+          dispatch(insertExpense(data));
           dispatch(fetchMonthlyExpense());
           dispatch(fetchYearlyExpense());
         }}
@@ -108,10 +116,14 @@ export default function ExpensePage() {
               <span className="text-sm font-medium text-gray-600">
                 Last Month Expense
               </span>
-              <span className="text-red-700 font-semibold">{formatCurrency(expenseData.monthlyExpenseSummmary.reduce(
-                (sum, entry) => sum + entry.amount,
-                0
-              ))}</span>
+              <span className="text-red-700 font-semibold">
+                {formatCurrency(
+                  expenseData.monthlyExpenseSummmary.reduce(
+                    (sum, entry) => sum + entry.amount,
+                    0,
+                  ),
+                )}
+              </span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
               <LineChart data={expenseData.monthlyExpenseSummmary}>
@@ -133,10 +145,14 @@ export default function ExpensePage() {
               <span className="text-sm font-medium text-gray-600">
                 This Year Expense
               </span>
-              <span className="text-red-700 font-semibold">{formatCurrency(expenseData.yearlyExpenseSummmary.reduce(
-                (sum, entry) => sum + entry.amount,
-                0
-              ))}</span>
+              <span className="text-red-700 font-semibold">
+                {formatCurrency(
+                  expenseData.yearlyExpenseSummmary.reduce(
+                    (sum, entry) => sum + entry.amount,
+                    0,
+                  ),
+                )}
+              </span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
               <LineChart data={expenseData.yearlyExpenseSummmary}>
@@ -231,7 +247,11 @@ export default function ExpensePage() {
             <TableBody>
               {paginatedData.length > 0 ? (
                 paginatedData.map((item) => (
-                  <TableRow key={item.id} hover onClick={() => handleEdit(item)}>
+                  <TableRow
+                    key={item.id}
+                    hover
+                    onClick={() => handleEdit(item)}
+                  >
                     <TableCell className="text-brand-700 font-medium">
                       {formatCurrency(item.amount)}
                     </TableCell>
