@@ -1,5 +1,7 @@
 import {
+  Backdrop,
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -8,71 +10,18 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Typography,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { COLORS, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
+import { COLORS, formatCurrency, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
 import BudgetDialog from '../components/BudgetDialogBox';
-
-export type BudgetRecord = {
-  amount: number;
-  source: string;
-  note?: string;
-  category: string;
-};
-
-const initialBudgetData: BudgetRecord[] = [
-  {
-    amount: 500,
-    source: 'Monthly Plan',
-    note: 'Rent budget',
-    category: 'Housing',
-  },
-  { amount: 200, source: 'Monthly Plan', note: 'Groceries', category: 'Food' },
-  {
-    amount: 100,
-    source: 'Savings Plan',
-    note: 'Emergency fund',
-    category: 'Savings',
-  },
-  {
-    amount: 150,
-    source: 'Entertainment',
-    note: 'Streaming, movies',
-    category: 'Leisure',
-  },
-  {
-    amount: 250,
-    source: 'Transport',
-    note: 'Fuel + Maintenance',
-    category: 'Transport',
-  },
-  {
-    amount: 300,
-    source: 'Utilities',
-    note: 'Electricity, Water, Gas',
-    category: 'Bills',
-  },
-];
-
-// Graph Data
-const monthlyBudgetTrend = [
-  { name: 'Week 1', amount: 100 },
-  { name: 'Week 2', amount: 200 },
-  { name: 'Week 3', amount: 180 },
-  { name: 'Week 4', amount: 220 },
-];
-
-const yearlyBudgetTrend = [
-  { name: 'Jan', amount: 1000 },
-  { name: 'Feb', amount: 1200 },
-  { name: 'Mar', amount: 950 },
-  { name: 'Apr', amount: 1300 },
-  { name: 'May', amount: 1100 },
-  { name: 'Jun', amount: 1250 },
-];
+import { fetchBudget, fetchMonthlyBudget, fetchYearlyBudget, insertBudget } from '../feature/budget/budgetSlice';
+import type { Budget } from '../feature/budget/budgetTypes';
+import { useAppDispatch, useAppSelector } from '../hooks';
 
 export default function BudgetPage() {
+  const dispatch = useAppDispatch();
   const [filters, setFilters] = useState({
     amount: '',
     source: '',
@@ -82,12 +31,20 @@ export default function BudgetPage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  useEffect(() => {
+    dispatch(fetchBudget());
+    dispatch(fetchMonthlyBudget());
+    dispatch(fetchYearlyBudget());
+  }, [dispatch]);
+
+  const budgetData = useAppSelector((state) => state.budget);
+
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
     setFilters({ ...filters, [field]: value });
     setPage(0);
   };
 
-  const filteredData = initialBudgetData.filter((record) => {
+  const filteredData = budgetData.budgets.filter((record) => {
     return (
       record.amount.toString().includes(filters.amount) &&
       record.source.toLowerCase().includes(filters.source.toLowerCase()) &&
@@ -104,22 +61,26 @@ export default function BudgetPage() {
 
   const shuffledColors = useMemo(
     () => shuffleArray(COLORS),
-    [yearlyBudgetTrend.length],
+    [budgetData.yearlyBudgetSummmary.length],
   );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedBudget, setSelectedBudget] = useState<BudgetRecord | null>(
+  const [selectedBudget, setSelectedBudget] = useState<Budget | null>(
     null,
   );
 
-  const handleEdit = (row: BudgetRecord) => {
+  const handleEdit = (row: Budget) => {
     setSelectedBudget(row);
     setDialogOpen(true);
   };
 
   return (
     <>
+      <Backdrop open={budgetData.loading} sx={{ zIndex: 1300, color: '#fff' }}>
+        <CircularProgress color="inherit" />
+        <Typography sx={{ ml: 2 }}>Loading income data...</Typography>
+      </Backdrop>
       <BudgetDialog
         open={dialogOpen}
         onClose={() => {
@@ -127,7 +88,9 @@ export default function BudgetPage() {
           setSelectedBudget(null);
         }}
         onSave={(data) => {
-          console.log('Add or Edit:', data);
+          dispatch(insertBudget(data))
+          dispatch(fetchMonthlyBudget());
+          dispatch(fetchYearlyBudget());
         }}
         initialData={selectedBudget}
       />
@@ -143,12 +106,15 @@ export default function BudgetPage() {
           <div className="bg-white rounded-xl shadow p-4">
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm font-medium text-gray-600">
-                Last Month Budget
+                Monthly Budget Trend
               </span>
-              <span className="text-brand-700 font-semibold">£700</span>
+              <span className="text-brand-700 font-semibold">{formatCurrency(budgetData.monthlyBudgetSummmary.reduce(
+                (sum, entry) => sum + entry.amount,
+                0
+              ))}</span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={monthlyBudgetTrend}>
+              <LineChart data={budgetData.monthlyBudgetSummmary}>
                 <Tooltip />
                 <Line
                   type="monotone"
@@ -165,12 +131,15 @@ export default function BudgetPage() {
           <div className="bg-white rounded-xl shadow p-4">
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm font-medium text-gray-600">
-                This Year Budget
+                Yearly Trend
               </span>
-              <span className="text-brand-700 font-semibold">£6,800</span>
+              <span className="text-brand-700 font-semibold">{formatCurrency(budgetData.yearlyBudgetSummmary.reduce(
+                (sum, entry) => sum + entry.amount,
+                0
+              ))}</span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={yearlyBudgetTrend}>
+              <LineChart data={budgetData.yearlyBudgetSummmary}>
                 <Tooltip />
                 <Line
                   type="monotone"
@@ -207,7 +176,9 @@ export default function BudgetPage() {
                     variant="standard"
                     size="small"
                     value={filters.amount}
-                    onChange={(e) => handleFilterChange('amount', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange('amount', e.target.value)
+                    }
                   />
                 </TableCell>
                 <TableCell>
@@ -216,7 +187,9 @@ export default function BudgetPage() {
                     variant="standard"
                     size="small"
                     value={filters.source}
-                    onChange={(e) => handleFilterChange('source', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange('source', e.target.value)
+                    }
                   />
                 </TableCell>
                 <TableCell>
@@ -257,10 +230,10 @@ export default function BudgetPage() {
             </TableHead>
             <TableBody>
               {paginatedData.length > 0 ? (
-                paginatedData.map((item, idx) => (
-                  <TableRow key={idx} hover onClick={() => handleEdit(item)}>
+                paginatedData.map((item) => (
+                  <TableRow key={item.id} hover onClick={() => handleEdit(item)}>
                     <TableCell className="text-brand-700 font-medium">
-                      £{item.amount.toLocaleString('en-GB')}
+                      {formatCurrency(item.amount)}
                     </TableCell>
                     <TableCell>{item.source}</TableCell>
                     <TableCell>{item.note || '-'}</TableCell>

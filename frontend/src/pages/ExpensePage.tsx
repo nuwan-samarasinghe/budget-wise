@@ -1,5 +1,7 @@
 import {
+  Backdrop,
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -8,71 +10,18 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Typography,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { COLORS, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
+import { COLORS, formatCurrency, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
 import ExpenseDialog from '../components/ExpenseDialogBox';
-
-export type ExpenseRecord = {
-  amount: number;
-  source: string;
-  note?: string;
-  category: string;
-};
-
-const initialExpenseData: ExpenseRecord[] = [
-  {
-    amount: 400,
-    source: 'Rent',
-    note: 'Monthly flat rent',
-    category: 'Housing',
-  },
-  {
-    amount: 120,
-    source: 'Groceries',
-    note: 'Weekly groceries',
-    category: 'Food',
-  },
-  {
-    amount: 80,
-    source: 'Netflix',
-    note: 'Streaming service',
-    category: 'Leisure',
-  },
-  {
-    amount: 60,
-    source: 'Uber',
-    note: 'Weekend transport',
-    category: 'Transport',
-  },
-  {
-    amount: 90,
-    source: 'Electricity',
-    note: 'Monthly bill',
-    category: 'Bills',
-  },
-  { amount: 50, source: 'Gym', note: 'Membership fee', category: 'Health' },
-];
-
-// Graph Data
-const monthlyExpenseTrend = [
-  { name: 'Week 1', amount: 200 },
-  { name: 'Week 2', amount: 250 },
-  { name: 'Week 3', amount: 180 },
-  { name: 'Week 4', amount: 300 },
-];
-
-const yearlyExpenseTrend = [
-  { name: 'Jan', amount: 1800 },
-  { name: 'Feb', amount: 1700 },
-  { name: 'Mar', amount: 1650 },
-  { name: 'Apr', amount: 1900 },
-  { name: 'May', amount: 2000 },
-  { name: 'Jun', amount: 2100 },
-];
+import { fetchExpense, fetchMonthlyExpense, fetchYearlyExpense, insertExpense } from '../feature/expense/expenseSlice';
+import type { Expense } from '../feature/expense/expenseTypes';
+import { useAppDispatch, useAppSelector } from '../hooks';
 
 export default function ExpensePage() {
+  const dispatch = useAppDispatch();
   const [filters, setFilters] = useState({
     amount: '',
     source: '',
@@ -82,9 +31,17 @@ export default function ExpensePage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  useEffect(() => {
+    dispatch(fetchExpense());
+    dispatch(fetchMonthlyExpense());
+    dispatch(fetchYearlyExpense());
+  }, [dispatch]);
+
+  const expenseData = useAppSelector((state) => state.expense);
+
   const shuffledColors = useMemo(
     () => shuffleArray(COLORS),
-    [yearlyExpenseTrend.length],
+    [expenseData.yearlyExpenseSummmary.length],
   );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
@@ -93,7 +50,7 @@ export default function ExpensePage() {
     setPage(0);
   };
 
-  const filteredData = initialExpenseData.filter((record) => {
+  const filteredData = expenseData.expenses.filter((record) => {
     return (
       record.amount.toString().includes(filters.amount) &&
       record.source.toLowerCase().includes(filters.source.toLowerCase()) &&
@@ -109,17 +66,21 @@ export default function ExpensePage() {
   );
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedBudget, setSelectedBudget] = useState<ExpenseRecord | null>(
+  const [selectedBudget, setSelectedBudget] = useState<Expense | null>(
     null,
   );
 
-  const handleEdit = (row: ExpenseRecord) => {
+  const handleEdit = (row: Expense) => {
     setSelectedBudget(row);
     setDialogOpen(true);
   };
 
   return (
     <>
+      <Backdrop open={expenseData.loading} sx={{ zIndex: 1300, color: '#fff' }}>
+        <CircularProgress color="inherit" />
+        <Typography sx={{ ml: 2 }}>Loading income data...</Typography>
+      </Backdrop>
       <ExpenseDialog
         open={dialogOpen}
         onClose={() => {
@@ -127,7 +88,9 @@ export default function ExpensePage() {
           setSelectedBudget(null);
         }}
         onSave={(data) => {
-          console.log('Add or Edit:', data);
+          dispatch(insertExpense(data))
+          dispatch(fetchMonthlyExpense());
+          dispatch(fetchYearlyExpense());
         }}
         initialData={selectedBudget}
       />
@@ -145,10 +108,13 @@ export default function ExpensePage() {
               <span className="text-sm font-medium text-gray-600">
                 Last Month Expense
               </span>
-              <span className="text-red-700 font-semibold">£930</span>
+              <span className="text-red-700 font-semibold">{formatCurrency(expenseData.monthlyExpenseSummmary.reduce(
+                (sum, entry) => sum + entry.amount,
+                0
+              ))}</span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={monthlyExpenseTrend}>
+              <LineChart data={expenseData.monthlyExpenseSummmary}>
                 <Tooltip />
                 <Line
                   type="monotone"
@@ -167,10 +133,13 @@ export default function ExpensePage() {
               <span className="text-sm font-medium text-gray-600">
                 This Year Expense
               </span>
-              <span className="text-red-700 font-semibold">£11,150</span>
+              <span className="text-red-700 font-semibold">{formatCurrency(expenseData.yearlyExpenseSummmary.reduce(
+                (sum, entry) => sum + entry.amount,
+                0
+              ))}</span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={yearlyExpenseTrend}>
+              <LineChart data={expenseData.yearlyExpenseSummmary}>
                 <Tooltip />
                 <Line
                   type="monotone"
@@ -207,7 +176,9 @@ export default function ExpensePage() {
                     variant="standard"
                     size="small"
                     value={filters.amount}
-                    onChange={(e) => handleFilterChange('amount', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange('amount', e.target.value)
+                    }
                   />
                 </TableCell>
                 <TableCell>
@@ -216,7 +187,9 @@ export default function ExpensePage() {
                     variant="standard"
                     size="small"
                     value={filters.source}
-                    onChange={(e) => handleFilterChange('source', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange('source', e.target.value)
+                    }
                   />
                 </TableCell>
                 <TableCell>
@@ -257,10 +230,10 @@ export default function ExpensePage() {
             </TableHead>
             <TableBody>
               {paginatedData.length > 0 ? (
-                paginatedData.map((item, idx) => (
-                  <TableRow key={idx} hover onClick={() => handleEdit(item)}>
-                    <TableCell className="text-red-700 font-medium">
-                      £{item.amount.toLocaleString('en-GB')}
+                paginatedData.map((item) => (
+                  <TableRow key={item.id} hover onClick={() => handleEdit(item)}>
+                    <TableCell className="text-brand-700 font-medium">
+                      {formatCurrency(item.amount)}
                     </TableCell>
                     <TableCell>{item.source}</TableCell>
                     <TableCell>{item.note || '-'}</TableCell>

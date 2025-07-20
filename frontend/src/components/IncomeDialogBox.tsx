@@ -9,13 +9,13 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import type { IncomeRecord } from '../pages/IncomePage';
+import type { Income } from '../feature/income/incomeTypes';
 
 type AddIncomeDialogProps = {
   open: boolean;
   onClose: () => void;
-  onSave: (data: IncomeRecord) => void;
-  initialData?: IncomeRecord | null; // null means add mode
+  onSave: (data: Income) => void;
+  initialData?: Income | null; // null means add mode
 };
 
 export default function IncomeDialog({
@@ -25,6 +25,7 @@ export default function IncomeDialog({
   initialData = null,
 }: AddIncomeDialogProps) {
   const [formData, setFormData] = useState({
+    id: '',
     amount: '',
     source: '',
     salaryMonth: '',
@@ -35,13 +36,14 @@ export default function IncomeDialog({
   useEffect(() => {
     if (initialData) {
       setFormData({
+        id: initialData.id,
         amount: initialData.amount.toString(),
         source: initialData.source,
         salaryMonth: initialData.salaryMonth,
         note: initialData.note || '',
       });
     } else {
-      setFormData({ amount: '', source: '', salaryMonth: '', note: '' });
+      setFormData({ id: '', amount: '', source: '', salaryMonth: '', note: '' });
     }
   }, [initialData, open]);
 
@@ -51,6 +53,7 @@ export default function IncomeDialog({
 
   const handleSubmit = () => {
     onSave({
+      id: formData.id,
       amount: parseFloat(formData.amount),
       source: formData.source,
       salaryMonth: formData.salaryMonth,
@@ -92,6 +95,7 @@ export default function IncomeDialog({
 
       <DialogContent>
         <Stack spacing={2} pt={1}>
+          <input type="hidden" name="id" value={formData.id} />
           <TextField
             label="Amount"
             type="number"

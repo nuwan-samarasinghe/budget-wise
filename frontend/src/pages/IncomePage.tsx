@@ -1,5 +1,7 @@
 import {
+  Backdrop,
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -8,76 +10,18 @@ import {
   TablePagination,
   TableRow,
   TextField,
+  Typography,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts';
-import { COLORS, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
+import { COLORS, formatCurrency, getTwoRandomItems, shuffleArray } from '../commons/GraphsUtil';
 import IncomeDialog from '../components/IncomeDialogBox';
-
-export type IncomeRecord = {
-  amount: number;
-  source: string;
-  note?: string;
-  salaryMonth: string;
-};
-
-const initialIncomeData: IncomeRecord[] = [
-  {
-    amount: 1200,
-    source: 'Salary',
-    note: 'June payment',
-    salaryMonth: '2024-06',
-  },
-  {
-    amount: 200,
-    source: 'Freelancing',
-    note: 'Logo design',
-    salaryMonth: '2024-06',
-  },
-  {
-    amount: 50,
-    source: 'Interest',
-    note: 'Bank savings',
-    salaryMonth: '2024-05',
-  },
-  {
-    amount: 100,
-    source: 'Gift',
-    note: 'Birthday gift',
-    salaryMonth: '2024-04',
-  },
-  {
-    amount: 90,
-    source: 'Interest',
-    note: 'Quarterly interest',
-    salaryMonth: '2024-03',
-  },
-  {
-    amount: 400,
-    source: 'Bonus',
-    note: 'Quarterly bonus',
-    salaryMonth: '2024-03',
-  },
-];
-
-const monthlyTrend = [
-  { name: 'Week 1', amount: 300 },
-  { name: 'Week 2', amount: 400 },
-  { name: 'Week 3', amount: 250 },
-  { name: 'Week 4', amount: 550 },
-];
-
-const yearlyTrend = [
-  { name: 'Jan', amount: 4000 },
-  { name: 'Feb', amount: 4200 },
-  { name: 'Mar', amount: 4100 },
-  { name: 'Apr', amount: 4300 },
-  { name: 'May', amount: 4500 },
-  { name: 'Jun', amount: 4700 },
-  { name: 'Jul', amount: 4800 },
-];
+import { fetchIncome, fetchMonthlyIncome, fetchYearlyIncome, insertIncome } from '../feature/income/incomeSlice';
+import type { Income } from '../feature/income/incomeTypes';
+import { useAppDispatch, useAppSelector } from '../hooks';
 
 export default function IncomePage() {
+  const dispatch = useAppDispatch();
   const [filters, setFilters] = useState({
     amount: '',
     source: '',
@@ -87,6 +31,14 @@ export default function IncomePage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  useEffect(() => {
+    dispatch(fetchIncome());
+    dispatch(fetchMonthlyIncome());
+    dispatch(fetchYearlyIncome());
+  }, [dispatch]);
+
+  const incomeData = useAppSelector((state) => state.income);
+
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
     setFilters({ ...filters, [field]: value });
     setPage(0);
@@ -94,11 +46,11 @@ export default function IncomePage() {
 
   const shuffledColors = useMemo(
     () => shuffleArray(COLORS),
-    [yearlyTrend.length],
+    [incomeData.yearlyIncomeSummmary.length],
   );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
-  const filteredData = initialIncomeData.filter((record) => {
+  const filteredData = incomeData.incomes.filter((record) => {
     return (
       record.amount.toString().includes(filters.amount) &&
       record.source.toLowerCase().includes(filters.source.toLowerCase()) &&
@@ -112,47 +64,54 @@ export default function IncomePage() {
   );
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedIncome, setSelectedIncome] = useState<IncomeRecord | null>(
+  const [selectedIncome, setSelectedIncome] = useState<Income | null>(
     null,
   );
 
-  const handleEdit = (row: IncomeRecord) => {
+  const handleEdit = (row: Income) => {
     setSelectedIncome(row);
     setDialogOpen(true);
   };
 
   return (
     <>
+      <Backdrop open={incomeData.loading} sx={{ zIndex: 1300, color: '#fff' }}>
+        <CircularProgress color="inherit" />
+        <Typography sx={{ ml: 2 }}>Loading income data...</Typography>
+      </Backdrop>
       <IncomeDialog
         open={dialogOpen}
         onClose={() => {
           setDialogOpen(false);
           setSelectedIncome(null);
         }}
-        onSave={(data) => {
-          console.log('Add or Edit:', data);
+        onSave={(data: Income) => {
+          dispatch(insertIncome(data))
+          dispatch(fetchMonthlyIncome());
+          dispatch(fetchYearlyIncome());
         }}
         initialData={selectedIncome}
       />
-
       <div className="p-4">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800">My Income</h1>
         </div>
-
         {/* Charts (Full Width) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           {/* Last Month */}
           <div className="bg-white rounded-xl shadow p-4">
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm font-medium text-gray-600">
-                Last Month
+                Monthly Income Trend
               </span>
-              <span className="text-green-700 font-semibold">£1,500</span>
+              <span className="text-green-700 font-semibold">{formatCurrency(incomeData.monthlyIncomeSummmary.reduce(
+                (sum, entry) => sum + entry.amount,
+                0
+              ))}</span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={monthlyTrend}>
+              <LineChart data={incomeData.monthlyIncomeSummmary}>
                 <Tooltip />
                 <Line
                   type="monotone"
@@ -164,17 +123,19 @@ export default function IncomePage() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-
           {/* This Year */}
           <div className="bg-white rounded-xl shadow p-4">
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm font-medium text-gray-600">
-                This Year
+                Yearly Trend
               </span>
-              <span className="text-green-700 font-semibold">£29,800</span>
+              <span className="text-green-700 font-semibold">{formatCurrency(incomeData.yearlyIncomeSummmary.reduce(
+                (sum, entry) => sum + entry.amount,
+                0
+              ))}</span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={yearlyTrend}>
+              <LineChart data={incomeData.yearlyIncomeSummmary}>
                 <Tooltip />
                 <Line
                   type="monotone"
@@ -187,7 +148,6 @@ export default function IncomePage() {
             </ResponsiveContainer>
           </div>
         </div>
-
         {/* Add Button */}
         <div className="flex justify-end mb-4">
           <Button
@@ -199,7 +159,6 @@ export default function IncomePage() {
             + Add Income
           </Button>
         </div>
-
         {/* Table with Filters */}
         <Paper elevation={3} className="rounded-2xl overflow-hidden">
           <Table>
@@ -263,15 +222,15 @@ export default function IncomePage() {
             </TableHead>
             <TableBody>
               {paginatedData.length > 0 ? (
-                paginatedData.map((item, idx) => (
+                paginatedData.map((item) => (
                   <TableRow
-                    key={idx}
+                    key={item.id}
                     hover
                     onClick={() => handleEdit(item)}
                     className="cursor-pointer"
                   >
                     <TableCell className="text-green-700 font-medium">
-                      £{item.amount.toLocaleString('en-GB')}
+                      {formatCurrency(item.amount)}
                     </TableCell>
                     <TableCell>{item.source}</TableCell>
                     <TableCell>{item.note || '-'}</TableCell>
@@ -281,7 +240,7 @@ export default function IncomePage() {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={3}
+                    colSpan={4}
                     className="text-center text-gray-500 py-4"
                   >
                     No records found.
@@ -290,7 +249,6 @@ export default function IncomePage() {
               )}
             </TableBody>
           </Table>
-
           {/* Pagination */}
           <TablePagination
             component="div"
