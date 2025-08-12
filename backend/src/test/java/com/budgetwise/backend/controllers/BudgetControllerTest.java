@@ -1,9 +1,12 @@
 package com.budgetwise.backend.controllers;
 
 import static org.junit.Assert.assertTrue;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.budgetwise.backend.common.AbstractBaseTest;
 import com.budgetwise.backend.dto.BudgetDto;
@@ -39,8 +42,8 @@ class BudgetControllerTest extends AbstractBaseTest {
 	void testCreateOrUpdateBudget() throws Exception {
 		BudgetDto inputBudget = new BudgetDto();
 		inputBudget.setAmount(new BigDecimal("7000"));
-		inputBudget.setSource("Company XYZ");
 		inputBudget.setNote("Bill payment");
+		inputBudget.setRecurrent(Boolean.FALSE);
 		Optional<Category> catOpt = repository.category.findByUserOrGlobal(null).stream().findAny();
 		assertTrue(catOpt.isPresent());
 		inputBudget.setCategory(new CategoryDto(catOpt.get().getId(), catOpt.get().getName()));
@@ -48,7 +51,6 @@ class BudgetControllerTest extends AbstractBaseTest {
 				.perform(post("/api/budgets").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate()))
 						.contentType("application/json").content(objectMapper.writeValueAsString(inputBudget)))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value(7000))
-				.andExpect(jsonPath("$.source").value("Company XYZ"))
 				.andExpect(jsonPath("$.note").value("Bill payment"))
 				.andExpect(jsonPath("$.category.id").value(catOpt.get().getId().toString()))
 				.andExpect(jsonPath("$.category.name").value(catOpt.get().getName()));

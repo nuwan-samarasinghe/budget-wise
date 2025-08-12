@@ -1,9 +1,10 @@
 package com.budgetwise.backend.dto;
 
+import com.budgetwise.backend.common.types.IncomeType;
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,13 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class SavingDto {
-	private UUID id;
-
+public class IncomeDto {
+	private String id;
+	@NotNull
 	private BigDecimal amount;
+	private String source;
 	private String note;
-	private LocalDate affectOn;
-
+	private LocalDate incomeMonth;
+	private IncomeType incomeType;
 	private Boolean recurrent;
 	private LocalDate from;
 	private LocalDate to;

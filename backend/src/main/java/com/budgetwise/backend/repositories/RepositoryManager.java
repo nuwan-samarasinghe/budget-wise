@@ -10,6 +10,6 @@ public class RepositoryManager {
 	public final BudgetRepository budget;
 	public final CategoryRepository category;
 	public final ExpenseRepository expense;
-	public final SalaryRepository salary;
+	public final IncomeRepository income;
 	public final SavingRepository savings;
 }

@@ -32,10 +32,15 @@ public class LoggingAspect {
 		logMsg.append("→ ").append(className).append(".").append(methodName).append("(");
 
 		for (int i = 0; i < args.length; i++) {
-			logMsg.append(parameterNames[i]).append("=");
 
-			if (parameterNames[i].toLowerCase().contains("password")) {
-				logMsg.append("****");
+			if (parameterNames != null) {
+				logMsg.append(parameterNames[i]).append("=");
+
+				if (parameterNames[i].toLowerCase().contains("password")) {
+					logMsg.append("****");
+				} else {
+					logMsg.append(summarizeArgument(args[i]));
+				}
 			} else {
 				logMsg.append(summarizeArgument(args[i]));
 			}

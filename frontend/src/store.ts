@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { ListenerMiddleware } from './commons/ListenerMiddleware';
 import authReducer from './feature/auth/authSlice';
 import budgetReducer from './feature/budget/budgetSlice';
+import dashboardReducer from './feature/dashboard/dashboardSlice';
 import expenseReducer from './feature/expense/expenseSlice';
 import incomeReducer from './feature/income/incomeSlice';
 import notificationReducer from './feature/notification/notificationSlice';
@@ -13,6 +14,7 @@ export const store = configureStore({
     expense: expenseReducer,
     auth: authReducer,
     notification: notificationReducer,
+    dashboard: dashboardReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(ListenerMiddleware.middleware),

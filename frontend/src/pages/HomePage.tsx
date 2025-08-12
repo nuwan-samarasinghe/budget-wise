@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   Bar,
   BarChart,
@@ -33,56 +33,21 @@ import {
   getTwoRandomItems,
   shuffleArray,
 } from '../commons/GraphsUtil';
+import { dashboard } from '../feature/dashboard/dashboardSlice';
+import { useAppDispatch, useAppSelector } from '../hooks';
 
 export default function HomePage() {
-  const monthlyData = [
-    { month: 'Jan', income: 5000, expense: 3200 },
-    { month: 'Feb', income: 5200, expense: 3100 },
-    { month: 'Mar', income: 4800, expense: 3400 },
-    { month: 'Apr', income: 5300, expense: 4000 },
-    { month: 'May', income: 5500, expense: 4200 },
-  ];
+  const dispatch = useAppDispatch();
 
-  const budgetData = [
-    { name: 'Budget', value: 5000 },
-    { name: 'Spent', value: 4200 },
-  ];
+  useEffect(() => {
+    dispatch(dashboard());
+  }, [dispatch]);
 
-  const expenseCategories = [
-    { name: 'Rent', value: 1500 },
-    { name: 'Groceries', value: 900 },
-    { name: 'Utilities', value: 400 },
-    { name: 'Entertainment', value: 400 },
-    { name: 'Transport', value: 300 },
-    { name: 'Misc', value: 700 },
-  ];
-
-  const topExpenses = [
-    { category: 'Rent', amount: 1500 },
-    { category: 'Groceries', amount: 900 },
-    { category: 'Utilities', amount: 400 },
-    { category: 'Entertainment', amount: 400 },
-    { category: 'Transport', amount: 300 },
-  ];
-
-  const recurringSubscriptions = [
-    { name: 'Netflix', amount: 12.99, category: 'Entertainment' },
-    { name: 'Spotify', amount: 9.99, category: 'Music' },
-    { name: 'Gym Membership', amount: 35.0, category: 'Fitness' },
-    { name: 'iCloud Storage', amount: 2.49, category: 'Storage' },
-  ];
-
-  const fixedVsVariable = [
-    { month: 'Jan', fixed: 1800, variable: 1400 },
-    { month: 'Feb', fixed: 1800, variable: 1300 },
-    { month: 'Mar', fixed: 1800, variable: 1600 },
-    { month: 'Apr', fixed: 1800, variable: 2200 },
-    { month: 'May', fixed: 1800, variable: 2400 },
-  ];
+  const dashboardData = useAppSelector((state) => state.dashboard);
 
   const shuffledColors = useMemo(
     () => shuffleArray(COLORS),
-    [topExpenses.length],
+    [dashboardData.dashboard.topExpenses.length],
   );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
@@ -102,12 +67,12 @@ export default function HomePage() {
               Top 5 Expense Categories
             </Typography>
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart layout="vertical" data={topExpenses}>
+              <BarChart layout="vertical" data={dashboardData.dashboard.topExpenses}>
                 <XAxis type="number" tickFormatter={formatCurrency} />
                 <YAxis type="category" dataKey="category" />
                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                 <Bar dataKey="amount">
-                  {topExpenses.map((_, index) => (
+                  {dashboardData.dashboard.topExpenses.map((_, index) => (
                     <Cell
                       key={`bar-${index}`}
                       fill={shuffledColors[index % shuffledColors.length]}
@@ -124,7 +89,7 @@ export default function HomePage() {
               Monthly Income vs Expense
             </Typography>
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={monthlyData}>
+              <LineChart data={dashboardData.dashboard.montlyIncomeAndExpenses}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis tickFormatter={formatCurrency} />
@@ -155,7 +120,7 @@ export default function HomePage() {
               Fixed vs Variable Expenses
             </Typography>
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={fixedVsVariable}>
+              <BarChart data={dashboardData.dashboard.fixedVariableIncomes}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis tickFormatter={formatCurrency} />
@@ -183,7 +148,7 @@ export default function HomePage() {
               Cash Flow Over Time
             </Typography>
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={monthlyData}>
+              <BarChart data={dashboardData.dashboard.montlyIncomeAndExpenses}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis tickFormatter={formatCurrency} />
@@ -206,7 +171,7 @@ export default function HomePage() {
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
-                  data={budgetData}
+                  data={dashboardData.dashboard.budgetAndExpense}
                   cx="50%"
                   cy="50%"
                   outerRadius={80}
@@ -215,7 +180,7 @@ export default function HomePage() {
                   }
                   dataKey="value"
                 >
-                  {budgetData.map((_, index) => (
+                  {dashboardData.dashboard.budgetAndExpense.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={shuffledColors[index % shuffledColors.length]}
@@ -236,7 +201,7 @@ export default function HomePage() {
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
-                  data={expenseCategories}
+                  data={dashboardData.dashboard.expenseCategories}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
@@ -246,7 +211,7 @@ export default function HomePage() {
                     `${name}: ${formatCurrency(value)}`
                   }
                 >
-                  {expenseCategories.map((_, index) => (
+                  {dashboardData.dashboard.expenseCategories.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={shuffledColors[index % shuffledColors.length]}
@@ -281,9 +246,9 @@ export default function HomePage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {recurringSubscriptions.map((item, index) => (
+                {dashboardData.dashboard.recurringSubscriptions.map((item, index) => (
                   <TableRow key={index}>
-                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.note}</TableCell>
                     <TableCell>{item.category}</TableCell>
                     <TableCell>{formatCurrency(item.amount)}</TableCell>
                   </TableRow>

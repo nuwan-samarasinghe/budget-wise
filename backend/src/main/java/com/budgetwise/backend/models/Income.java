@@ -1,8 +1,10 @@
 package com.budgetwise.backend.models;
 
+import com.budgetwise.backend.common.types.IncomeType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -10,6 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -20,15 +24,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@Entity(name = "bwise_savings")
-public class Saving extends BaseModel {
+@Entity(name = "bwise_income")
+@Table(name = "bwise_income", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "salary_month"})})
+public class Income extends BaseModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
 
 	private BigDecimal amount;
+	private String source;
 	private String note;
-	private LocalDate affectOn;
+
+	@Column(name = "income_month", nullable = false)
+	private LocalDate incomeMonth;
+
+	@Enumerated
+	private IncomeType incomeType;
 
 	@Column(nullable = false)
 	private Boolean recurrent = Boolean.FALSE;

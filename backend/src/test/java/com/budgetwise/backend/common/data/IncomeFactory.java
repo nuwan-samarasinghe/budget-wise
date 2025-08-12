@@ -1,7 +1,7 @@
 package com.budgetwise.backend.common.data;
 
-import com.budgetwise.backend.models.Salary;
-import com.budgetwise.backend.repositories.SalaryRepository;
+import com.budgetwise.backend.models.Income;
+import com.budgetwise.backend.repositories.IncomeRepository;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -9,15 +9,15 @@ import java.time.ZoneId;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SalaryFactory extends AbstractFactory<Salary> {
+public class IncomeFactory extends AbstractFactory<Income> {
 
-	protected SalaryFactory(SalaryRepository repository) {
+	protected IncomeFactory(IncomeRepository repository) {
 		super(repository);
 	}
 
 	@Override
-	protected Salary build() {
-		Salary salary = new Salary();
+	protected Income build() {
+		Income salary = new Income();
 		salary.setAmount(BigDecimal.valueOf(faker.number().randomDouble(2, 3000, 10000)));
 		String source = faker.company().name();
 		LocalDate salaryMonth = faker.date()
@@ -25,7 +25,7 @@ public class SalaryFactory extends AbstractFactory<Salary> {
 						Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()))
 				.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		salary.setNote(faker.lorem().sentence());
-		salary.setSalaryMonth(salaryMonth);
+		salary.setIncomeMonth(salaryMonth);
 		salary.setSource(source);
 		return salary;
 	}

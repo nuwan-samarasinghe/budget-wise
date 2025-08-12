@@ -1,8 +1,11 @@
 package com.budgetwise.backend.controllers;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.budgetwise.backend.common.AbstractBaseTest;
 import com.budgetwise.backend.dto.SavingDto;
@@ -31,18 +34,20 @@ class SavingsControllerTest extends AbstractBaseTest {
 	void testCreateOrUpdateSaving() throws Exception {
 		SavingDto inputSaving = new SavingDto();
 		inputSaving.setAmount(new BigDecimal("7000"));
-		inputSaving.setNotes("March Saving");
+		inputSaving.setNote("March Saving");
+		inputSaving.setRecurrent(Boolean.FALSE);
 		this.mockMvc
 				.perform(post("/api/savings").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate()))
 						.contentType("application/json").content(objectMapper.writeValueAsString(inputSaving)))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.amount").value(7000))
-				.andExpect(jsonPath("$.notes").value("March Saving"));
+				.andExpect(jsonPath("$.note").value("March Saving"));
 	}
 
 	@Test
 	void testDeleteSaving() throws Exception {
 		Saving saving1 = this.factory.saving.createAndPersist();
 		saving1.setUser(this.permenentUser);
+		saving1.setRecurrent(Boolean.FALSE);
 		this.repository.savings.saveAndFlush(saving1);
 		this.mockMvc
 				.perform(delete("/api/savings/{savingId}", saving1.getId()).with(csrf())

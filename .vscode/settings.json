@@ -2,6 +2,7 @@
   "java.compile.nullAnalysis.mode": "automatic",
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.debug.settings.onBuildFailureProceed": true,
+  "java.jdt.ls.lombokSupport.enabled": true,
   "sonarlint.connectedMode.project": {
     "connectionId": "nuwan-samarasinghe",
     "projectKey": "budget-wise-backend"
@@ -16,6 +17,6 @@
     "source.fixAll": "always",
     "source.organizeImports": "always",
     "source.sortMembers": "always",
-    "source.removeUnusedImports": true
+    "source.removeUnusedImports": "explicit"
   }
 }

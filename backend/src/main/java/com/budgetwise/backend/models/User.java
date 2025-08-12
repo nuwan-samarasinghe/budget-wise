@@ -38,11 +38,15 @@ public class User extends BaseModel implements UserDetails {
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Salary> salaries;
+	private List<Income> salaries;
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Saving> savings;
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Expense> expenses;
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
