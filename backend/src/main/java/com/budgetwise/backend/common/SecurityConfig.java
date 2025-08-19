@@ -49,8 +49,9 @@ public class SecurityConfig {
 				.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 						.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
 				.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-						.requestMatchers("/swagger-ui.html").permitAll().requestMatchers("/api-docs").permitAll()
-						.requestMatchers("/api-docs/*").permitAll().requestMatchers("/swagger-ui/*").permitAll()
+						.requestMatchers("/api/csrf").permitAll().requestMatchers("/swagger-ui.html").permitAll()
+						.requestMatchers("/api-docs").permitAll().requestMatchers("/api-docs/*").permitAll()
+						.requestMatchers("/swagger-ui/*").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/auth/signin").permitAll().anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 				.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);

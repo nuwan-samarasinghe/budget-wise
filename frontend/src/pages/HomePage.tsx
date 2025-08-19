@@ -67,7 +67,10 @@ export default function HomePage() {
               Top 5 Expense Categories
             </Typography>
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart layout="vertical" data={dashboardData.dashboard.topExpenses}>
+              <BarChart
+                layout="vertical"
+                data={dashboardData.dashboard.topExpenses}
+              >
                 <XAxis type="number" tickFormatter={formatCurrency} />
                 <YAxis type="category" dataKey="category" />
                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
@@ -246,13 +249,15 @@ export default function HomePage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {dashboardData.dashboard.recurringSubscriptions.map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{item.note}</TableCell>
-                    <TableCell>{item.category}</TableCell>
-                    <TableCell>{formatCurrency(item.amount)}</TableCell>
-                  </TableRow>
-                ))}
+                {dashboardData.dashboard.recurringSubscriptions.map(
+                  (item, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{item.note}</TableCell>
+                      <TableCell>{item.category}</TableCell>
+                      <TableCell>{formatCurrency(item.amount)}</TableCell>
+                    </TableRow>
+                  ),
+                )}
               </TableBody>
             </Table>
           </TableContainer>

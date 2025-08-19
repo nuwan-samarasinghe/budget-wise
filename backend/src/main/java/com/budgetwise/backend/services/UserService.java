@@ -1,5 +1,6 @@
 package com.budgetwise.backend.services;
 
+import com.budgetwise.backend.common.SecurityUtils;
 import com.budgetwise.backend.dto.AuthDto;
 import com.budgetwise.backend.dto.MessageDto;
 import com.budgetwise.backend.models.User;
@@ -23,14 +24,17 @@ public class UserService implements UserDetailsService {
 	private final RepositoryManager interfaces;
 	private final PasswordEncoder passwordEn;
 	private final JwtService jwtService;
+	private final SecurityUtils securityUtil;
 
 	@Value("${jwt.expirationMs}")
 	private long expMs;
 
-	public UserService(RepositoryManager interfaces, PasswordEncoder passwordEn, JwtService jwtService) {
+	public UserService(RepositoryManager interfaces, PasswordEncoder passwordEn, JwtService jwtService,
+			SecurityUtils securityUtil) {
 		this.interfaces = interfaces;
 		this.passwordEn = passwordEn;
 		this.jwtService = jwtService;
+		this.securityUtil = securityUtil;
 	}
 
 	@Override
@@ -46,6 +50,15 @@ public class UserService implements UserDetailsService {
 		user.setPassword(this.passwordEn.encode(dto.getPassword()));
 		interfaces.user.saveAndFlush(user);
 		return new ResponseEntity<>(new MessageDto(HttpStatus.CREATED.value(), "User Created"), HttpStatus.CREATED);
+	}
+
+	public ResponseEntity<MessageDto> getUserDetails() {
+		User user = this.securityUtil.getCurrentUser();
+		if (user != null) {
+			return ResponseEntity.ok(new MessageDto(HttpStatus.OK.value(), "Logged In"));
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 	}
 
 	public ResponseEntity<MessageDto> loginUser(Authentication authentication, HttpServletResponse response) {

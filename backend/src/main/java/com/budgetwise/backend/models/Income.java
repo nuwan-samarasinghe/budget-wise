@@ -3,6 +3,7 @@ package com.budgetwise.backend.models;
 import com.budgetwise.backend.common.types.IncomeType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,7 +38,8 @@ public class Income extends BaseModel {
 	private String note;
 
 	@Column(name = "income_month", nullable = false)
-	private LocalDate incomeMonth;
+	@Convert(converter = YearMonthDateAttributeConverter.class)
+	private YearMonth incomeMonth;
 
 	@Enumerated
 	private IncomeType incomeType;

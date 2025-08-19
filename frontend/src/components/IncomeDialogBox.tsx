@@ -1,10 +1,13 @@
 import { AttachMoney } from '@mui/icons-material';
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
+  MenuItem,
   Stack,
   TextField,
 } from '@mui/material';
@@ -15,6 +18,7 @@ type AddIncomeDialogProps = {
   open: boolean;
   onClose: () => void;
   onSave: (data: Income) => void;
+  onDelete: (data: Income) => void;
   initialData?: Income | null; // null means add mode
 };
 
@@ -22,38 +26,51 @@ export default function IncomeDialog({
   open,
   onClose,
   onSave,
+  onDelete,
   initialData = null,
 }: AddIncomeDialogProps) {
   const [formData, setFormData] = useState({
     id: '',
     amount: '',
     source: '',
-    salaryMonth: '',
     note: '',
+    incomeMonth: '',
+    incomeType: '',
+    recurrent: false,
+    fromDate: '',
+    toDate: ''
   });
 
   // Populate fields on edit
   useEffect(() => {
     if (initialData) {
       setFormData({
-        id: initialData.id,
+        id: initialData.id ? initialData.id : '',
         amount: initialData.amount.toString(),
         source: initialData.source,
-        salaryMonth: initialData.salaryMonth,
         note: initialData.note || '',
+        incomeMonth: initialData.incomeMonth,
+        incomeType: initialData.incomeType,
+        recurrent: initialData.recurrent,
+        fromDate: initialData.fromDate ? initialData.fromDate : '',
+        toDate: initialData.toDate ? initialData.toDate : '',
       });
     } else {
       setFormData({
         id: '',
         amount: '',
         source: '',
-        salaryMonth: '',
         note: '',
+        incomeMonth: '',
+        incomeType: '',
+        recurrent: false,
+        fromDate: '',
+        toDate: '',
       });
     }
   }, [initialData, open]);
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -62,13 +79,32 @@ export default function IncomeDialog({
       id: formData.id,
       amount: parseFloat(formData.amount),
       source: formData.source,
-      salaryMonth: formData.salaryMonth,
       note: formData.note,
+      incomeMonth: formData.incomeMonth,
+      incomeType: formData.incomeType,
+      recurrent: formData.recurrent,
+      fromDate: formData.fromDate,
+      toDate: formData.toDate,
     });
     onClose();
   };
 
-  const isValid = formData.amount && formData.source && formData.salaryMonth;
+  const handleDelete = () => {
+    onDelete({
+      id: formData.id,
+      amount: parseFloat(formData.amount),
+      source: formData.source,
+      note: formData.note,
+      incomeMonth: formData.incomeMonth,
+      incomeType: formData.incomeType,
+      recurrent: formData.recurrent,
+      fromDate: formData.fromDate,
+      toDate: formData.toDate,
+    });
+    onClose();
+  }
+
+  const isValid = formData.amount && formData.source && formData.incomeMonth;
 
   return (
     <Dialog
@@ -116,14 +152,6 @@ export default function IncomeDialog({
             onChange={(e) => handleChange('source', e.target.value)}
           />
           <TextField
-            label="Salary Month"
-            type="month"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-            value={formData.salaryMonth}
-            onChange={(e) => handleChange('salaryMonth', e.target.value)}
-          />
-          <TextField
             label="Note"
             fullWidth
             multiline
@@ -131,6 +159,57 @@ export default function IncomeDialog({
             value={formData.note}
             onChange={(e) => handleChange('note', e.target.value)}
           />
+          <TextField
+            label="Income Month"
+            type="month"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            value={formData.incomeMonth}
+            onChange={(e) => handleChange('incomeMonth', e.target.value)}
+          />
+          <TextField
+            select
+            label="Income Type"
+            fullWidth
+            value={formData.incomeType}
+            onChange={(e) => handleChange('incomeType', e.target.value)}
+          >
+            <MenuItem value="SALARY">Salary</MenuItem>
+            <MenuItem value="WIFE_INCOME">Wife Income</MenuItem>
+          </TextField>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formData.recurrent}
+                onChange={(e) => handleChange('recurrent', e.target.checked)}
+              />
+            }
+            label="Recurrent"
+          />
+
+          {formData.recurrent && (
+            <>
+              <TextField
+                label="From Date"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={formData.fromDate}
+                onChange={(e) => handleChange('fromDate', e.target.value)}
+              />
+              <TextField
+                label="To Date"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={formData.toDate}
+                onChange={(e) => handleChange('toDate', e.target.value)}
+                inputProps={{
+                  min: formData.fromDate || undefined,
+                }}
+              />
+            </>
+          )}
         </Stack>
       </DialogContent>
 
@@ -139,6 +218,9 @@ export default function IncomeDialog({
         <Button variant="contained" onClick={handleSubmit} disabled={!isValid}>
           {initialData ? 'Update' : 'Save'}
         </Button>
+        {initialData && <Button variant="outlined" color="error" onClick={handleDelete}>
+          Delete
+        </Button>}
       </DialogActions>
     </Dialog>
   );

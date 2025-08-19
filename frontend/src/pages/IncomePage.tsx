@@ -22,9 +22,9 @@ import {
 } from '../commons/GraphsUtil';
 import IncomeDialog from '../components/IncomeDialogBox';
 import {
+  deleteIncome,
   fetchIncome,
-  fetchMonthlyIncome,
-  fetchYearlyIncome,
+  fetchMonthlyYearlyIncomeSummary,
   insertIncome,
 } from '../feature/income/incomeSlice';
 import type { Income } from '../feature/income/incomeTypes';
@@ -36,15 +36,17 @@ export default function IncomePage() {
     amount: '',
     source: '',
     note: '',
-    salaryMonth: '',
+    incomeMonth: '',
+    incomeType: '',
+    recurrent: false,
+    fromDate: '',
+    toDate: ''
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    dispatch(fetchIncome());
-    dispatch(fetchMonthlyIncome());
-    dispatch(fetchYearlyIncome());
+    refresh();
   }, [dispatch]);
 
   const incomeData = useAppSelector((state) => state.income);
@@ -67,6 +69,11 @@ export default function IncomePage() {
       (record.note?.toLowerCase().includes(filters.note.toLowerCase()) ?? true)
     );
   });
+
+  const refresh = () => {
+    dispatch(fetchIncome());
+    dispatch(fetchMonthlyYearlyIncomeSummary());
+  };
 
   const paginatedData = filteredData.slice(
     page * rowsPerPage,
@@ -93,10 +100,17 @@ export default function IncomePage() {
           setDialogOpen(false);
           setSelectedIncome(null);
         }}
-        onSave={(data: Income) => {
-          dispatch(insertIncome(data));
-          dispatch(fetchMonthlyIncome());
-          dispatch(fetchYearlyIncome());
+        onSave={async (data: Income) => {
+          await dispatch(insertIncome(data)).unwrap();
+          refresh();
+          setDialogOpen(false);
+          setSelectedIncome(null);
+        }}
+        onDelete={async (data: Income) => {
+          await dispatch(deleteIncome(data)).unwrap();
+          refresh();
+          setDialogOpen(false);
+          setSelectedIncome(null);
         }}
         initialData={selectedIncome}
       />
@@ -213,11 +227,20 @@ export default function IncomePage() {
                 </TableCell>
                 <TableCell>
                   <TextField
-                    label="Salary Month"
+                    label="Income Month"
                     variant="standard"
                     size="small"
-                    value={filters.salaryMonth}
-                    onChange={(e) => handleFilterChange('note', e.target.value)}
+                    value={filters.incomeMonth}
+                    onChange={(e) => handleFilterChange('incomeMonth', e.target.value)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    label="Income Type"
+                    variant="standard"
+                    size="small"
+                    value={filters.incomeType}
+                    onChange={(e) => handleFilterChange('incomeType', e.target.value)}
                   />
                 </TableCell>
               </TableRow>
@@ -232,7 +255,10 @@ export default function IncomePage() {
                   Note
                 </TableCell>
                 <TableCell className="font-semibold text-gray-700">
-                  Salary Month
+                  Income Month
+                </TableCell>
+                <TableCell className="font-semibold text-gray-700">
+                  Income Type
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -250,13 +276,14 @@ export default function IncomePage() {
                     </TableCell>
                     <TableCell>{item.source}</TableCell>
                     <TableCell>{item.note || '-'}</TableCell>
-                    <TableCell>{item.salaryMonth || '-'}</TableCell>
+                    <TableCell>{item.incomeMonth || '-'}</TableCell>
+                    <TableCell>{item.incomeType || '-'}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={4}
+                    colSpan={5}
                     className="text-center text-gray-500 py-4"
                   >
                     No records found.

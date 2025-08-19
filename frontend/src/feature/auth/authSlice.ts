@@ -13,6 +13,15 @@ export const loginUser = createAsyncThunk('auth/login', async (auth: Auth) => {
   return res.data;
 });
 
+export const checkAuth = createAsyncThunk('auth/check', async () => {
+  const res = await api.get('/auth/me');
+  return res.data;
+});
+
+export const logout = createAsyncThunk('auth/logout', async () => {
+  await api.post('/auth/logout');
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -30,6 +39,21 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Login failed';
+        state.isAuthenticated = false;
+      })
+      .addCase(checkAuth.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(checkAuth.fulfilled, (state) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+      })
+      .addCase(checkAuth.rejected, (state) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.error = 'Login required';
+      })
+      .addCase(logout.fulfilled, (state) => {
         state.isAuthenticated = false;
       });
   },

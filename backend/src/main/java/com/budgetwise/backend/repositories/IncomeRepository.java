@@ -7,5 +7,5 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IncomeRepository extends JpaRepository<Income, UUID> {
-	List<Income> findByUser(User user);
+	List<Income> findByUserOrderByIncomeMonthAsc(User user);
 }

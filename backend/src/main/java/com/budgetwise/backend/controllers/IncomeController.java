@@ -2,6 +2,7 @@ package com.budgetwise.backend.controllers;
 
 import com.budgetwise.backend.dto.IncomeDto;
 import com.budgetwise.backend.dto.MessageDto;
+import com.budgetwise.backend.dto.MontlyAndYearlySummaryDtos;
 import com.budgetwise.backend.services.IncomeService;
 import java.util.List;
 import java.util.UUID;
@@ -37,5 +38,10 @@ public class IncomeController {
 	@DeleteMapping("/{incomeId}")
 	public ResponseEntity<MessageDto> deleteSalary(@PathVariable UUID incomeId) {
 		return this.incomeService.deleteIncome(incomeId);
+	}
+
+	@GetMapping("/summary")
+	public ResponseEntity<MontlyAndYearlySummaryDtos> summary() {
+		return this.incomeService.getIncomeSummary();
 	}
 }

@@ -1,9 +1,15 @@
+export type IncomeType = "SALARY" | "WIFE_INCOME";
+
 export type Income = {
-  id: string;
+  id?: string;
   amount: number;
   source: string;
   note?: string;
-  salaryMonth: string;
+  incomeMonth: string;
+  incomeType: IncomeType;
+  recurrent: boolean;
+  fromDate?: string;
+  toDate?: string;
 };
 
 export type MonthlyIncomeSummary = {
