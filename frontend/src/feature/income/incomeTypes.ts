@@ -1,4 +1,4 @@
-export type IncomeType = "SALARY" | "WIFE_INCOME";
+export type IncomeType = 'SALARY' | 'WIFE_INCOME';
 
 export type Income = {
   id?: string;

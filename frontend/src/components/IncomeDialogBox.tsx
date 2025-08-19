@@ -38,7 +38,7 @@ export default function IncomeDialog({
     incomeType: '',
     recurrent: false,
     fromDate: '',
-    toDate: ''
+    toDate: '',
   });
 
   // Populate fields on edit
@@ -102,7 +102,7 @@ export default function IncomeDialog({
       toDate: formData.toDate,
     });
     onClose();
-  }
+  };
 
   const isValid = formData.amount && formData.source && formData.incomeMonth;
 
@@ -218,9 +218,11 @@ export default function IncomeDialog({
         <Button variant="contained" onClick={handleSubmit} disabled={!isValid}>
           {initialData ? 'Update' : 'Save'}
         </Button>
-        {initialData && <Button variant="outlined" color="error" onClick={handleDelete}>
-          Delete
-        </Button>}
+        {initialData && (
+          <Button variant="outlined" color="error" onClick={handleDelete}>
+            Delete
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );

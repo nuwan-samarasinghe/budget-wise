@@ -20,9 +20,10 @@ export const fetchIncome = createAsyncThunk('income/fetch', async () => {
 });
 
 export const insertIncome = createAsyncThunk(
-  'income/insert', async (income: Income) => {
+  'income/insert',
+  async (income: Income) => {
     const filteredIncome = Object.fromEntries(
-      Object.entries(income).filter(([_, value]) => value !== '')
+      Object.entries(income).filter(([_, value]) => value !== ''),
     );
     const res = await api.post('/incomes', filteredIncome);
     return res.data;

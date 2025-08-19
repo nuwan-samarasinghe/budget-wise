@@ -40,7 +40,7 @@ export default function IncomePage() {
     incomeType: '',
     recurrent: false,
     fromDate: '',
-    toDate: ''
+    toDate: '',
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -231,7 +231,9 @@ export default function IncomePage() {
                     variant="standard"
                     size="small"
                     value={filters.incomeMonth}
-                    onChange={(e) => handleFilterChange('incomeMonth', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange('incomeMonth', e.target.value)
+                    }
                   />
                 </TableCell>
                 <TableCell>
@@ -240,7 +242,9 @@ export default function IncomePage() {
                     variant="standard"
                     size="small"
                     value={filters.incomeType}
-                    onChange={(e) => handleFilterChange('incomeType', e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange('incomeType', e.target.value)
+                    }
                   />
                 </TableCell>
               </TableRow>

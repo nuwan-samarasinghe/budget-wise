@@ -1,7 +1,4 @@
-import {
-  createAsyncThunk,
-  createSlice
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../commons/axios';
 import type { Dashboard, DashboardState } from './dashboardTypes';
 

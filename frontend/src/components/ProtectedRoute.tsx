@@ -6,16 +6,16 @@ import { useAppSelector } from '../hooks';
 import type { AppDispatch } from '../store';
 
 const ProtectedRoute = () => {
-
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => { dispatch(checkAuth()); }, [dispatch]);
-
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
 
   const authState = useAppSelector((state) => state.auth);
 
   if (!authState || authState.loading) return null;
-  
+
   return authState.isAuthenticated ? (
     <Outlet />
   ) : (
