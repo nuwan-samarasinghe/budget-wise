@@ -1,12 +1,14 @@
 package com.budgetwise.backend.services;
 
-import com.budgetwise.backend.common.SecurityUtils;
-import com.budgetwise.backend.dto.CategoryDto;
-import com.budgetwise.backend.repositories.RepositoryManager;
 import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.budgetwise.backend.common.SecurityUtils;
+import com.budgetwise.backend.dto.CategoryDto;
+import com.budgetwise.backend.repositories.RepositoryManager;
 
 @Service
 public class CategoryService {
@@ -23,6 +25,6 @@ public class CategoryService {
 
 	public ResponseEntity<List<CategoryDto>> getUserCategories() {
 		return ResponseEntity.ok(this.interfaces.category.findByUserOrGlobal(this.securityUtil.getCurrentUser())
-				.stream().map(salary -> this.mapper.map(salary, CategoryDto.class)).toList());
+				.stream().map(cat -> this.mapper.map(cat, CategoryDto.class)).toList());
 	}
 }

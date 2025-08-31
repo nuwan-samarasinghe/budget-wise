@@ -3,103 +3,46 @@ import {
   createSlice,
   type PayloadAction,
 } from '@reduxjs/toolkit';
+import api from '../../commons/axios';
 import type { Budget, BudgetState } from './budgetTypes';
 
 const initialState: BudgetState = {
   budgets: [],
-  monthlyBudgetSummmary: [],
-  yearlyBudgetSummmary: [],
+  monthlyBudgetSummary: [],
+  yearlyBudgetSummary: [],
   loading: false,
   error: null,
 };
 
 export const fetchBudget = createAsyncThunk('budget/fetch', async () => {
-  await new Promise((res) => setTimeout(res, 500));
-  return [
-    {
-      id: crypto.randomUUID(),
-      amount: 500,
-      source: 'Monthly Plan',
-      note: 'Rent budget',
-      category: 'Housing',
-    },
-    {
-      id: crypto.randomUUID(),
-      amount: 200,
-      source: 'Monthly Plan',
-      note: 'Groceries',
-      category: 'Food',
-    },
-    {
-      id: crypto.randomUUID(),
-      amount: 100,
-      source: 'Savings Plan',
-      note: 'Emergency fund',
-      category: 'Savings',
-    },
-    {
-      id: crypto.randomUUID(),
-      amount: 150,
-      source: 'Entertainment',
-      note: 'Streaming, movies',
-      category: 'Leisure',
-    },
-    {
-      id: crypto.randomUUID(),
-      amount: 250,
-      source: 'Transport',
-      note: 'Fuel + Maintenance',
-      category: 'Transport',
-    },
-    {
-      id: crypto.randomUUID(),
-      amount: 300,
-      source: 'Utilities',
-      note: 'Electricity, Water, Gas',
-      category: 'Bills',
-    },
-  ];
+  const res = await api.get('/budgets');
+  return res.data;
 });
 
 export const insertBudget = createAsyncThunk(
   'budget/insert',
   async (budget: Budget) => {
-    await new Promise((res) => setTimeout(res, 500));
-    //TODO waitting for backend
-    if (!budget.id) {
-      budget.id = crypto.randomUUID();
-    }
-    return budget;
+    const filteredBudget = Object.fromEntries(
+      Object.entries(budget).filter(([_, value]) => value !== ''),
+    );
+    const res = await api.post('/budgets', filteredBudget);
+    return res.data;
   },
 );
 
-export const fetchMonthlyBudget = createAsyncThunk(
-  'budget/fetchMonthly',
+export const fetchMonthlyYearlyIncomeSummary = createAsyncThunk(
+  'budget/fetchMonthlyYearlySummary',
   async () => {
-    await new Promise((res) => setTimeout(res, 500));
-    //TODO waitting for backend
-    return [
-      { month: 'Jan', amount: 4000 },
-      { month: 'Feb', amount: 4200 },
-      { month: 'Mar', amount: 4100 },
-      { month: 'Apr', amount: 4300 },
-      { month: 'May', amount: 4500 },
-      { month: 'Jun', amount: 4700 },
-      { month: 'Jul', amount: 4800 },
-    ];
+    const res = await api.get('/budgets/summary');
+    return res.data;
   },
 );
 
-export const fetchYearlyBudget = createAsyncThunk(
-  'budget/fetchYearly',
-  async () => {
-    await new Promise((res) => setTimeout(res, 500));
-    //TODO waitting for backend
-    return [
-      { year: '2023', amount: 4000 },
-      { year: '2024', amount: 4200 },
-      { year: '2025', amount: 4100 },
-    ];
+export const deleteBudget = createAsyncThunk(
+  'budget/deleteBudget',
+  async (budget: Budget) => {
+    const res = await api.delete(`/budgets/${budget.id}`);
+    return res.data;
   },
 );
 
@@ -121,31 +64,30 @@ const budgetSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch budget details';
       })
-      .addCase(fetchMonthlyBudget.pending, (state) => {
+      .addCase(fetchMonthlyYearlyIncomeSummary.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchMonthlyBudget.fulfilled, (state, action) => {
+      .addCase(fetchMonthlyYearlyIncomeSummary.fulfilled, (state, action) => {
         state.loading = false;
-        state.monthlyBudgetSummmary = action.payload;
+        state.monthlyBudgetSummary = action.payload.monthSummary;
+        state.yearlyBudgetSummary = action.payload.yearSummary;
       })
-      .addCase(fetchMonthlyBudget.rejected, (state, action) => {
+      .addCase(fetchMonthlyYearlyIncomeSummary.rejected, (state, action) => {
         state.loading = false;
         state.error =
-          action.error.message || 'Failed to fetch monthly budget details';
+          action.error.message || 'Failed to fetch budget summary';
       })
-      .addCase(fetchYearlyBudget.pending, (state) => {
+      .addCase(deleteBudget.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchYearlyBudget.fulfilled, (state, action) => {
+      .addCase(deleteBudget.fulfilled, (state) => {
         state.loading = false;
-        state.yearlyBudgetSummmary = action.payload;
       })
-      .addCase(fetchYearlyBudget.rejected, (state, action) => {
+      .addCase(deleteBudget.rejected, (state, action) => {
         state.loading = false;
-        state.error =
-          action.error.message || 'Failed to fetch yearly budget details';
+        state.error = action.error.message || 'Failed to delete income';
       })
       .addCase(insertBudget.pending, (state) => {
         state.loading = true;

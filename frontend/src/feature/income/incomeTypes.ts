@@ -24,8 +24,8 @@ export type YearlyIncomeSummary = {
 
 export type IncomeState = {
   incomes: Income[];
-  monthlyIncomeSummmary: MonthlyIncomeSummary[];
-  yearlyIncomeSummmary: YearlyIncomeSummary[];
+  monthlyIncomeSummary: MonthlyIncomeSummary[];
+  yearlyIncomeSummary: YearlyIncomeSummary[];
   loading: boolean;
   error: string | null;
 };

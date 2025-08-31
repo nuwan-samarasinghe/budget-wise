@@ -1,9 +1,15 @@
+import type { Category } from "../category/categoryTypes";
+
 export type Budget = {
   id: string;
   amount: number;
-  source: string;
   note?: string;
-  category: string;
+  affectOn: string;
+  budgetMonth: string;
+  recurrent: boolean;
+  fromDate?: string;
+  toDate?: string;
+  category: Category;
 };
 
 export type MonthlyBudgetSummary = {
@@ -18,8 +24,8 @@ export type YearlyBudgetSummary = {
 
 export type BudgetState = {
   budgets: Budget[];
-  monthlyBudgetSummmary: MonthlyBudgetSummary[];
-  yearlyBudgetSummmary: YearlyBudgetSummary[];
+  monthlyBudgetSummary: MonthlyBudgetSummary[];
+  yearlyBudgetSummary: YearlyBudgetSummary[];
   loading: boolean;
   error: string | null;
 };

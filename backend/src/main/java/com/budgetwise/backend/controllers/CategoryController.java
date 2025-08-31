@@ -1,12 +1,14 @@
 package com.budgetwise.backend.controllers;
 
-import com.budgetwise.backend.dto.CategoryDto;
-import com.budgetwise.backend.services.CategoryService;
 import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.budgetwise.backend.dto.CategoryDto;
+import com.budgetwise.backend.services.CategoryService;
 
 @RestController
 @RequestMapping("api/categories")
@@ -19,7 +21,7 @@ public class CategoryController {
 	}
 
 	@GetMapping("")
-	public ResponseEntity<List<CategoryDto>> getSalaries() {
+	public ResponseEntity<List<CategoryDto>> getCategories() {
 		return this.categoryService.getUserCategories();
 	}
 }

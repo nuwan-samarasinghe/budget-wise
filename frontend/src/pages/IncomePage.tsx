@@ -58,7 +58,7 @@ export default function IncomePage() {
 
   const shuffledColors = useMemo(
     () => shuffleArray(COLORS),
-    [incomeData.yearlyIncomeSummmary.length],
+    [incomeData.yearlyIncomeSummary.length],
   );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
@@ -129,7 +129,7 @@ export default function IncomePage() {
               </span>
               <span className="text-green-700 font-semibold">
                 {formatCurrency(
-                  incomeData.monthlyIncomeSummmary.reduce(
+                  incomeData.monthlyIncomeSummary.reduce(
                     (sum, entry) => sum + entry.amount,
                     0,
                   ),
@@ -137,7 +137,7 @@ export default function IncomePage() {
               </span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={incomeData.monthlyIncomeSummmary}>
+              <LineChart data={incomeData.yearlyIncomeSummary}>
                 <Tooltip />
                 <Line
                   type="monotone"
@@ -157,7 +157,7 @@ export default function IncomePage() {
               </span>
               <span className="text-green-700 font-semibold">
                 {formatCurrency(
-                  incomeData.yearlyIncomeSummmary.reduce(
+                  incomeData.yearlyIncomeSummary.reduce(
                     (sum, entry) => sum + entry.amount,
                     0,
                   ),
@@ -165,7 +165,7 @@ export default function IncomePage() {
               </span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={incomeData.yearlyIncomeSummmary}>
+              <LineChart data={incomeData.yearlyIncomeSummary}>
                 <Tooltip />
                 <Line
                   type="monotone"

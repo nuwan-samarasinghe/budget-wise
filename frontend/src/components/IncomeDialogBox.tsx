@@ -104,7 +104,7 @@ export default function IncomeDialog({
     onClose();
   };
 
-  const isValid = formData.amount && formData.source && formData.incomeMonth;
+  const isValid = formData.amount && formData.source && formData.incomeMonth && formData.incomeType && formData.recurrent;
 
   return (
     <Dialog

@@ -26,22 +26,22 @@ public class IncomeController {
 	}
 
 	@GetMapping("")
-	public ResponseEntity<List<IncomeDto>> getSalaries() {
+	public ResponseEntity<List<IncomeDto>> getIncomes() {
 		return this.incomeService.getUserIncomes();
 	}
 
 	@PostMapping("")
-	public ResponseEntity<IncomeDto> createOrUpdateSalary(@RequestBody IncomeDto incomeDto) {
+	public ResponseEntity<IncomeDto> createOrUpdateIncome(@RequestBody IncomeDto incomeDto) {
 		return this.incomeService.createOrUpdateIncome(incomeDto);
 	}
 
 	@DeleteMapping("/{incomeId}")
-	public ResponseEntity<MessageDto> deleteSalary(@PathVariable UUID incomeId) {
+	public ResponseEntity<MessageDto> deleteIncome(@PathVariable UUID incomeId) {
 		return this.incomeService.deleteIncome(incomeId);
 	}
 
 	@GetMapping("/summary")
-	public ResponseEntity<MontlyAndYearlySummaryDtos> summary() {
+	public ResponseEntity<MontlyAndYearlySummaryDtos> getIncomeSummary() {
 		return this.incomeService.getIncomeSummary();
 	}
 }

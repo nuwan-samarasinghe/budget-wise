@@ -2,6 +2,7 @@ package com.budgetwise.backend.controllers;
 
 import com.budgetwise.backend.dto.BudgetDto;
 import com.budgetwise.backend.dto.MessageDto;
+import com.budgetwise.backend.dto.MontlyAndYearlySummaryDtos;
 import com.budgetwise.backend.services.BudgetService;
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/budgets")
 public class BudgetController {
+
 	private final BudgetService budgetService;
 
 	public BudgetController(BudgetService budgetService) {
@@ -29,8 +31,13 @@ public class BudgetController {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<BudgetDto> createOrUpdateSalary(@RequestBody BudgetDto budgetDto) {
+	public ResponseEntity<BudgetDto> createOrUpdateBudget(@RequestBody BudgetDto budgetDto) {
 		return this.budgetService.createOrUpdateBudget(budgetDto);
+	}
+
+	@GetMapping("/summary")
+	public ResponseEntity<MontlyAndYearlySummaryDtos> getBudgetSummary() {
+		return this.budgetService.getBudgetSummary();
 	}
 
 	@DeleteMapping("/{budgetId}")

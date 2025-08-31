@@ -2,6 +2,7 @@ package com.budgetwise.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,6 +31,10 @@ public class Expense extends BaseModel {
 	private BigDecimal amount;
 	private String note;
 	private LocalDate affectOn;
+
+	@Column(name = "income_month", nullable = false)
+	@Convert(converter = YearMonthDateAttributeConverter.class)
+	private YearMonth expenseMonth;
 
 	@Column(nullable = false)
 	private Boolean recurrent = Boolean.FALSE;

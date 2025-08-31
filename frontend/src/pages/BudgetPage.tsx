@@ -23,31 +23,39 @@ import {
 import BudgetDialog from '../components/BudgetDialogBox';
 import {
   fetchBudget,
-  fetchMonthlyBudget,
-  fetchYearlyBudget,
+  fetchMonthlyYearlyIncomeSummary,
   insertBudget,
 } from '../feature/budget/budgetSlice';
 import type { Budget } from '../feature/budget/budgetTypes';
+import { fetchCategories } from '../feature/category/categorySlice';
 import { useAppDispatch, useAppSelector } from '../hooks';
 
 export default function BudgetPage() {
   const dispatch = useAppDispatch();
   const [filters, setFilters] = useState({
     amount: '',
-    source: '',
+    budgetMonth: '',
     note: '',
-    category: '',
+    category: {
+      id: '',
+      name: ''
+    },
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    dispatch(fetchBudget());
-    dispatch(fetchMonthlyBudget());
-    dispatch(fetchYearlyBudget());
+    dispatch(fetchCategories());
+    refresh();
   }, [dispatch]);
 
   const budgetData = useAppSelector((state) => state.budget);
+  const categoryData = useAppSelector((state) => state.categories);
+
+  const refresh = () => {
+    dispatch(fetchBudget());
+    dispatch(fetchMonthlyYearlyIncomeSummary());
+  };
 
   const handleFilterChange = (field: keyof typeof filters, value: string) => {
     setFilters({ ...filters, [field]: value });
@@ -57,10 +65,8 @@ export default function BudgetPage() {
   const filteredData = budgetData.budgets.filter((record) => {
     return (
       record.amount.toString().includes(filters.amount) &&
-      record.source.toLowerCase().includes(filters.source.toLowerCase()) &&
-      (record.note?.toLowerCase().includes(filters.note.toLowerCase()) ??
-        true) &&
-      record.category.toLowerCase().includes(filters.category.toLowerCase())
+      (record.note?.toLowerCase().includes(filters.note.toLowerCase()) ?? true) &&
+      record.category.name.toLowerCase().includes(filters.category.name.toLowerCase())
     );
   });
 
@@ -71,7 +77,7 @@ export default function BudgetPage() {
 
   const shuffledColors = useMemo(
     () => shuffleArray(COLORS),
-    [budgetData.yearlyBudgetSummmary.length],
+    [budgetData.yearlyBudgetSummary.length],
   );
   const [fixedColor, variableColor] = getTwoRandomItems(shuffledColors);
 
@@ -92,14 +98,16 @@ export default function BudgetPage() {
       <BudgetDialog
         open={dialogOpen}
         onClose={() => {
+          refresh();
           setDialogOpen(false);
           setSelectedBudget(null);
         }}
         onSave={(data) => {
           dispatch(insertBudget(data));
-          dispatch(fetchMonthlyBudget());
-          dispatch(fetchYearlyBudget());
+          refresh();
+          setDialogOpen(false);
         }}
+        categories={categoryData.categories}
         initialData={selectedBudget}
       />
       <div className="p-4">
@@ -118,7 +126,7 @@ export default function BudgetPage() {
               </span>
               <span className="text-brand-700 font-semibold">
                 {formatCurrency(
-                  budgetData.monthlyBudgetSummmary.reduce(
+                  budgetData.monthlyBudgetSummary.reduce(
                     (sum, entry) => sum + entry.amount,
                     0,
                   ),
@@ -126,7 +134,7 @@ export default function BudgetPage() {
               </span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={budgetData.monthlyBudgetSummmary}>
+              <LineChart data={budgetData.monthlyBudgetSummary}>
                 <Tooltip />
                 <Line
                   type="monotone"
@@ -147,7 +155,7 @@ export default function BudgetPage() {
               </span>
               <span className="text-brand-700 font-semibold">
                 {formatCurrency(
-                  budgetData.yearlyBudgetSummmary.reduce(
+                  budgetData.yearlyBudgetSummary.reduce(
                     (sum, entry) => sum + entry.amount,
                     0,
                   ),
@@ -155,7 +163,7 @@ export default function BudgetPage() {
               </span>
             </div>
             <ResponsiveContainer width="100%" height={50}>
-              <LineChart data={budgetData.yearlyBudgetSummmary}>
+              <LineChart data={budgetData.yearlyBudgetSummary}>
                 <Tooltip />
                 <Line
                   type="monotone"
@@ -199,12 +207,12 @@ export default function BudgetPage() {
                 </TableCell>
                 <TableCell>
                   <TextField
-                    label="Source"
+                    label="Budget Month"
                     variant="standard"
                     size="small"
-                    value={filters.source}
+                    value={filters.budgetMonth}
                     onChange={(e) =>
-                      handleFilterChange('source', e.target.value)
+                      handleFilterChange('budgetMonth', e.target.value)
                     }
                   />
                 </TableCell>
@@ -222,7 +230,7 @@ export default function BudgetPage() {
                     label="Category"
                     variant="standard"
                     size="small"
-                    value={filters.category}
+                    value={filters.category.name}
                     onChange={(e) =>
                       handleFilterChange('category', e.target.value)
                     }
@@ -234,7 +242,7 @@ export default function BudgetPage() {
                   Amount
                 </TableCell>
                 <TableCell className="font-semibold text-gray-700">
-                  Source
+                  Budget Month
                 </TableCell>
                 <TableCell className="font-semibold text-gray-700">
                   Note
@@ -255,9 +263,9 @@ export default function BudgetPage() {
                     <TableCell className="text-brand-700 font-medium">
                       {formatCurrency(item.amount)}
                     </TableCell>
-                    <TableCell>{item.source}</TableCell>
+                    <TableCell>{item.budgetMonth}</TableCell>
                     <TableCell>{item.note || '-'}</TableCell>
-                    <TableCell>{item.category}</TableCell>
+                    <TableCell>{item.category.name}</TableCell>
                   </TableRow>
                 ))
               ) : (

@@ -1,47 +1,45 @@
 import { AccountBalanceWallet } from '@mui/icons-material';
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
   MenuItem,
   Stack,
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import type { Budget } from '../feature/budget/budgetTypes';
+import type { Category } from '../feature/category/categoryTypes';
 
 type BudgetDialogProps = {
   open: boolean;
   onClose: () => void;
   onSave: (data: Budget) => void;
   initialData?: Budget | null;
+  categories: Category[]
 };
-
-const categoryOptions = [
-  'Housing',
-  'Food',
-  'Transport',
-  'Utilities',
-  'Entertainment',
-  'Healthcare',
-  'Savings',
-  'Miscellaneous',
-];
 
 export default function BudgetDialog({
   open,
   onClose,
   onSave,
   initialData = null,
+  categories,
 }: BudgetDialogProps) {
   const [formData, setFormData] = useState({
     id: '',
     amount: '',
-    source: '',
-    category: '',
     note: '',
+    affectOn: '',
+    budgetMonth: '',
+    recurrent: false,
+    fromDate: '',
+    toDate: '',
+    category: '',
   });
 
   useEffect(() => {
@@ -49,16 +47,30 @@ export default function BudgetDialog({
       setFormData({
         id: initialData.id,
         amount: initialData.amount.toString(),
-        source: initialData.source,
-        category: initialData.category,
         note: initialData.note || '',
+        affectOn: initialData.affectOn,
+        budgetMonth: initialData.budgetMonth,
+        recurrent: initialData.recurrent,
+        fromDate: initialData.fromDate ? initialData.fromDate : '',
+        toDate: initialData.toDate ? initialData.toDate : '',
+        category: initialData.category,
       });
     } else {
-      setFormData({ id: '', amount: '', source: '', category: '', note: '' });
+      setFormData({
+        id: '',
+        amount: '',
+        note: '',
+        affectOn: '',
+        budgetMonth: '',
+        recurrent: false,
+        fromDate: '',
+        toDate: '',
+        category: '',
+      });
     }
   }, [initialData, open]);
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: string, value: string | boolean | object) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -66,14 +78,18 @@ export default function BudgetDialog({
     onSave({
       id: formData.id,
       amount: parseFloat(formData.amount),
-      source: formData.source,
-      category: formData.category,
       note: formData.note,
+      affectOn: formData.affectOn,
+      budgetMonth: formData.budgetMonth,
+      recurrent: formData.recurrent,
+      fromDate: formData.fromDate,
+      toDate: formData.toDate,
+      category: formData.category,
     });
     onClose();
   };
 
-  const isValid = formData.amount && formData.source && formData.category;
+  const isValid = formData.amount && formData.category && formData.budgetMonth;
 
   return (
     <Dialog
@@ -114,25 +130,6 @@ export default function BudgetDialog({
             onChange={(e) => handleChange('amount', e.target.value)}
           />
           <TextField
-            label="Source"
-            fullWidth
-            value={formData.source}
-            onChange={(e) => handleChange('source', e.target.value)}
-          />
-          <TextField
-            select
-            label="Category"
-            fullWidth
-            value={formData.category}
-            onChange={(e) => handleChange('category', e.target.value)}
-          >
-            {categoryOptions.map((cat) => (
-              <MenuItem key={cat} value={cat}>
-                {cat}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
             label="Note"
             fullWidth
             multiline
@@ -140,6 +137,68 @@ export default function BudgetDialog({
             value={formData.note}
             onChange={(e) => handleChange('note', e.target.value)}
           />
+          <TextField
+            label="Affected Date"
+            type="date"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            value={formData.affectOn}
+            onChange={(e) => handleChange('affectOn', e.target.value)}
+          />
+          <TextField
+            label="Budget Month"
+            type="month"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            value={formData.budgetMonth}
+            onChange={(e) => handleChange('budgetMonth', e.target.value)}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={formData.recurrent}
+                onChange={(e) => handleChange('recurrent', e.target.checked)}
+              />
+            }
+            label="Recurrent"
+          />
+
+          {formData.recurrent && (
+            <>
+              <TextField
+                label="From Date"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={formData.fromDate}
+                onChange={(e) => handleChange('fromDate', e.target.value)}
+              />
+              <TextField
+                label="To Date"
+                type="date"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                value={formData.toDate}
+                onChange={(e) => handleChange('toDate', e.target.value)}
+                inputProps={{
+                  min: formData.fromDate || undefined,
+                }}
+              />
+            </>
+          )}
+          <TextField
+            select
+            label="Category"
+            fullWidth
+            value={formData.category}
+            onChange={(e) => handleChange('category', categories.find(cat => cat.id === e.target.value)!)}
+          >
+            {categories.map((cat) => (
+              <MenuItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </MenuItem>
+            ))}
+          </TextField>
         </Stack>
       </DialogContent>
 

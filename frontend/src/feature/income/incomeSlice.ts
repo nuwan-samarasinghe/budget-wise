@@ -8,8 +8,8 @@ import type { Income, IncomeState } from './incomeTypes';
 
 const initialState: IncomeState = {
   incomes: [],
-  monthlyIncomeSummmary: [],
-  yearlyIncomeSummmary: [],
+  monthlyIncomeSummary: [],
+  yearlyIncomeSummary: [],
   loading: false,
   error: null,
 };
@@ -70,8 +70,8 @@ const salarySlice = createSlice({
       })
       .addCase(fetchMonthlyYearlyIncomeSummary.fulfilled, (state, action) => {
         state.loading = false;
-        state.monthlyIncomeSummmary = action.payload.monthSummary;
-        state.yearlyIncomeSummmary = action.payload.yearSummary;
+        state.monthlyIncomeSummary = action.payload.monthSummary;
+        state.yearlyIncomeSummary = action.payload.yearSummary;
       })
       .addCase(fetchMonthlyYearlyIncomeSummary.rejected, (state, action) => {
         state.loading = false;
