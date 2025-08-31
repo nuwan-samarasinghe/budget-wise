@@ -1,4 +1,4 @@
-import type { Category } from "../category/categoryTypes";
+import type { Category } from '../category/categoryTypes';
 
 export type Budget = {
   id: string;

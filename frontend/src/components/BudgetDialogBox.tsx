@@ -20,7 +20,7 @@ type BudgetDialogProps = {
   onClose: () => void;
   onSave: (data: Budget) => void;
   initialData?: Budget | null;
-  categories: Category[]
+  categories: Category[];
 };
 
 export default function BudgetDialog({
@@ -191,7 +191,12 @@ export default function BudgetDialog({
             label="Category"
             fullWidth
             value={formData.category}
-            onChange={(e) => handleChange('category', categories.find(cat => cat.id === e.target.value)!)}
+            onChange={(e) =>
+              handleChange(
+                'category',
+                categories.find((cat) => cat.id === e.target.value)!,
+              )
+            }
           >
             {categories.map((cat) => (
               <MenuItem key={cat.id} value={cat.id}>

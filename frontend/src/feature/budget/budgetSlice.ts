@@ -75,8 +75,7 @@ const budgetSlice = createSlice({
       })
       .addCase(fetchMonthlyYearlyIncomeSummary.rejected, (state, action) => {
         state.loading = false;
-        state.error =
-          action.error.message || 'Failed to fetch budget summary';
+        state.error = action.error.message || 'Failed to fetch budget summary';
       })
       .addCase(deleteBudget.pending, (state) => {
         state.loading = true;

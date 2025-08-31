@@ -1,14 +1,12 @@
 package com.budgetwise.backend.services;
 
-import java.util.List;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import com.budgetwise.backend.common.SecurityUtils;
 import com.budgetwise.backend.dto.CategoryDto;
 import com.budgetwise.backend.repositories.RepositoryManager;
+import java.util.List;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CategoryService {

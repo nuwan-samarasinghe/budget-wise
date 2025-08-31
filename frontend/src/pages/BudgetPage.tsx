@@ -38,7 +38,7 @@ export default function BudgetPage() {
     note: '',
     category: {
       id: '',
-      name: ''
+      name: '',
     },
   });
   const [page, setPage] = useState(0);
@@ -65,8 +65,11 @@ export default function BudgetPage() {
   const filteredData = budgetData.budgets.filter((record) => {
     return (
       record.amount.toString().includes(filters.amount) &&
-      (record.note?.toLowerCase().includes(filters.note.toLowerCase()) ?? true) &&
-      record.category.name.toLowerCase().includes(filters.category.name.toLowerCase())
+      (record.note?.toLowerCase().includes(filters.note.toLowerCase()) ??
+        true) &&
+      record.category.name
+        .toLowerCase()
+        .includes(filters.category.name.toLowerCase())
     );
   });
 

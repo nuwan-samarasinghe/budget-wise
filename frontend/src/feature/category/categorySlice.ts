@@ -1,7 +1,4 @@
-import {
-  createAsyncThunk,
-  createSlice
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import api from '../../commons/axios';
 import type { CategoryState } from './categoryTypes';
 
@@ -33,7 +30,7 @@ const categorySlice = createSlice({
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch budget details';
-      })
+      });
   },
 });
 
