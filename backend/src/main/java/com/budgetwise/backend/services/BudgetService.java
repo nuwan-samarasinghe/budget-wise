@@ -73,6 +73,7 @@ public class BudgetService {
 			Expense mappedExpense = this.mapper.map(budget, Expense.class);
 			mappedExpense.setId(null);
 			mappedExpense.setUser(user);
+			mappedExpense.setExpenseMonth(budget.getBudgetMonth());
 			this.interfaces.expense.saveAndFlush(mappedExpense);
 			return ResponseEntity.ok(new MessageDto(HttpStatus.OK.value(), "Successfully transfered"));
 		} else {

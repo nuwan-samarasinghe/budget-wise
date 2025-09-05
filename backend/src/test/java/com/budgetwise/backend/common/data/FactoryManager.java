@@ -8,7 +8,7 @@ public class FactoryManager {
 
 	public final UserFactory user;
 
-	public final IncomeFactory salary;
+	public final IncomeFactory income;
 
 	public final SavingFactory saving;
 
@@ -17,7 +17,7 @@ public class FactoryManager {
 	@Autowired
 	public FactoryManager(UserFactory userFactory, IncomeFactory salary, SavingFactory saving, BudgetFactory budget) {
 		this.user = userFactory;
-		this.salary = salary;
+		this.income = salary;
 		this.saving = saving;
 		this.budget = budget;
 	}

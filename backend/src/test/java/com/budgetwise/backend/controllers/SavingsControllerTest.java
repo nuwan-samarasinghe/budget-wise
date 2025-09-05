@@ -12,6 +12,8 @@ import com.budgetwise.backend.dto.SavingDto;
 import com.budgetwise.backend.models.Saving;
 import jakarta.servlet.http.Cookie;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,7 @@ class SavingsControllerTest extends AbstractBaseTest {
 		inputSaving.setAmount(new BigDecimal("7000"));
 		inputSaving.setNote("March Saving");
 		inputSaving.setRecurrent(Boolean.FALSE);
+		inputSaving.setSavingMonth(YearMonth.from(LocalDate.of(2024, 3, 1)));
 		this.mockMvc
 				.perform(post("/api/savings").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate()))
 						.contentType("application/json").content(objectMapper.writeValueAsString(inputSaving)))

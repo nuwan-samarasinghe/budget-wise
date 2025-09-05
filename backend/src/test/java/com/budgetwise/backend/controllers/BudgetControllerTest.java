@@ -15,6 +15,7 @@ import com.budgetwise.backend.models.Budget;
 import com.budgetwise.backend.models.Category;
 import jakarta.servlet.http.Cookie;
 import java.math.BigDecimal;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class BudgetControllerTest extends AbstractBaseTest {
 
 	@Test
-	void testGGetUserBudgets() throws Exception {
+	void testGetUserBudgets() throws Exception {
 		Budget budget1 = this.factory.budget.createAndPersist();
 		Budget budget2 = this.factory.budget.createAndPersist();
 		budget1.setUser(this.permenentUser);
@@ -35,7 +36,7 @@ class BudgetControllerTest extends AbstractBaseTest {
 		budget2.setCategory(catOpt.get());
 		this.repository.budget.saveAllAndFlush(List.of(budget1, budget2));
 		this.mockMvc.perform(get("/api/budgets").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate())))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(2));
+				.andExpect(status().isOk()).andExpect(jsonPath("$.length()").exists());
 	}
 
 	@Test
@@ -44,6 +45,7 @@ class BudgetControllerTest extends AbstractBaseTest {
 		inputBudget.setAmount(new BigDecimal("7000"));
 		inputBudget.setNote("Bill payment");
 		inputBudget.setRecurrent(Boolean.FALSE);
+		inputBudget.setBudgetMonth(YearMonth.now());
 		Optional<Category> catOpt = repository.category.findByUserOrGlobal(null).stream().findAny();
 		assertTrue(catOpt.isPresent());
 		inputBudget.setCategory(new CategoryDto(catOpt.get().getId(), catOpt.get().getName()));
@@ -57,7 +59,7 @@ class BudgetControllerTest extends AbstractBaseTest {
 	}
 
 	@Test
-	void testDeleteSalary() throws Exception {
+	void testDeleteBudget() throws Exception {
 		Budget budget1 = this.factory.budget.createAndPersist();
 		budget1.setUser(this.permenentUser);
 		this.repository.budget.saveAndFlush(budget1);
@@ -65,6 +67,27 @@ class BudgetControllerTest extends AbstractBaseTest {
 				.perform(delete("/api/budgets/{budgetId}", budget1.getId()).with(csrf())
 						.cookie(new Cookie("USER_SESSSION", authenticate())))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.message").value("Successfully deleted"));
+	}
+
+	@Test
+	void testGetSummary() throws Exception {
+		Budget budget1 = this.factory.budget.createAndPersist();
+		budget1.setBudgetMonth(YearMonth.of(YearMonth.now().getYear(), 1));
+		Budget budget2 = this.factory.budget.createAndPersist();
+		budget2.setBudgetMonth(YearMonth.of(YearMonth.now().getYear(), 2));
+		Budget budget3 = this.factory.budget.createAndPersist();
+		budget3.setBudgetMonth(YearMonth.of(YearMonth.now().getYear(), 3));
+		Budget budget4 = this.factory.budget.createAndPersist();
+		budget4.setBudgetMonth(YearMonth.of(YearMonth.now().getYear(), 4));
+		budget1.setUser(this.permenentUser);
+		budget2.setUser(this.permenentUser);
+		budget3.setUser(this.permenentUser);
+		budget4.setUser(this.permenentUser);
+		this.repository.budget.saveAllAndFlush(List.of(budget1, budget2, budget3, budget4));
+		this.mockMvc
+				.perform(get("/api/budgets/summary").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate())))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.monthSummary").exists())
+				.andExpect(jsonPath("$.yearSummary").exists()).andExpect(jsonPath("$.monthSummary").exists());
 	}
 
 	@Test

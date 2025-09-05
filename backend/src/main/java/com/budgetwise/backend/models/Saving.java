@@ -32,7 +32,7 @@ public class Saving extends BaseModel {
 	private String note;
 	private LocalDate affectOn;
 
-	@Column(name = "income_month", nullable = false)
+	@Column(name = "saving_month", nullable = false)
 	@Convert(converter = YearMonthDateAttributeConverter.class)
 	private YearMonth savingMonth;
 

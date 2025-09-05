@@ -4,7 +4,10 @@ import com.budgetwise.backend.models.Budget;
 import com.budgetwise.backend.models.Category;
 import com.budgetwise.backend.repositories.BudgetRepository;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.util.List;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
@@ -25,6 +28,11 @@ public class BudgetFactory extends AbstractFactory<Budget> {
 		budget.setAmount(BigDecimal.valueOf(faker.number().randomDouble(2, 3000, 10000)));
 		budget.setNote(faker.lorem().sentence());
 		budget.setAffectOn(LocalDate.now());
+		LocalDate incomeMonth = faker.date()
+				.between(Date.from(LocalDate.now().minusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+						Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()))
+				.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		budget.setBudgetMonth(YearMonth.from(incomeMonth));
 		List<Category> categories = cacheManager.getCache("categories").get("all", List.class);
 		budget.setCategory(categories.getFirst());
 		budget.setRecurrent(Boolean.FALSE);

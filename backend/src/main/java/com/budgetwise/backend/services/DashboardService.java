@@ -40,15 +40,15 @@ public class DashboardService {
 		Map<YearMonth, MonthlyIncomeAndExpense> monthlyMap = new HashMap<>();
 		Map<Category, ExpenseVsCategories> yearlyCategoryMap = new HashMap<>();
 
-		// Aggregate salaries (income)
-		user.getSalaries().forEach(salary -> {
-			YearMonth ym = YearMonth.of(salary.getIncomeMonth().getYear(), salary.getIncomeMonth().getMonth());
+		// Aggregate income
+		user.getIncomes().forEach(income -> {
+			YearMonth ym = YearMonth.of(income.getIncomeMonth().getYear(), income.getIncomeMonth().getMonth());
 			monthlyMap.computeIfAbsent(ym, k -> {
 				MonthlyIncomeAndExpense mie = new MonthlyIncomeAndExpense();
 				mie.setYear(k.getYear());
 				mie.setMonth(k.getMonth().name());
 				return mie;
-			}).setIncome(monthlyMap.get(ym).getIncome() + salary.getAmount().doubleValue());
+			}).setIncome(monthlyMap.get(ym).getIncome() + income.getAmount().doubleValue());
 		});
 
 		BudgetAndExpense budgetAndExpense1 = new BudgetAndExpense();
