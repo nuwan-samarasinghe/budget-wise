@@ -1,3 +1,12 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'org.liquibase:liquibase-core:4.26.0'
+  }
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.3'
@@ -5,6 +14,7 @@ plugins {
 	id 'com.diffplug.spotless' version '6.25.0'
 	id "org.sonarqube" version "6.2.0.5505"
 	id 'jacoco'
+    id 'org.liquibase.gradle' version "3.0.2"
 }
 
 group = 'com.budgetwise'
@@ -83,6 +93,10 @@ repositories {
 	maven { url = 'https://repo.spring.io/snapshot' }
 }
 
+configurations {
+  liquibaseRuntime.extendsFrom runtimeClasspath
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -92,6 +106,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.modelmapper:modelmapper:3.2.4'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
+    liquibaseRuntime 'org.liquibase:liquibase-core:4.26.0'
+    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+    liquibaseRuntime 'info.picocli:picocli:4.6.1'
+    liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate6:4.26.0'
+    liquibaseRuntime 'org.postgresql:postgresql:42.7.4'
+    liquibaseRuntime files(sourceSets.main.output)
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok'
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
@@ -106,6 +126,43 @@ dependencies {
 	testImplementation 'net.datafaker:datafaker:2.4.3'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+}
+
+tasks.withType(org.liquibase.gradle.LiquibaseTask).configureEach {
+  dependsOn("classes")
+}
+
+tasks.register("printLiquibaseRuntime") {
+  doLast {
+    configurations.liquibaseRuntime.resolve().each { println it }
+  }
+}
+
+liquibase {
+  activities {
+    main {
+      changelogFile "src/main/resources/db/changelog/db.changelog-master.yaml"
+
+      // Target DB
+      url "jdbc:postgresql://localhost:5432/budget_wise"
+      username "budget_wise"
+      password "budget_wise"
+
+      // Do NOT filter schemas out during the diff (let it see the HIBERNATE side)
+      // schemas "public"   // <- comment this out for the diffChangelog run
+
+      // Remap schemas in the generated changelog so output uses 'public'
+      outputSchemas "public"        // maps reference->output schema
+      includeSchema false           // don’t write schema qualifiers in changesets (default)
+
+      // Hibernate reference (your entities)
+      referenceUrl """hibernate:spring:com.budgetwise,com.budgetwise.backend.models
+        ?dialect=org.hibernate.dialect.PostgreSQLDialect
+        &hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        &hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        &hibernate.default_schema=public"""
+    }
+  }
 }
 
 tasks.named('test') {

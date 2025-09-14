@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "bwise_user")
+@Table(name = "bwise_user", schema = "public")
 public class User extends BaseModel implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)

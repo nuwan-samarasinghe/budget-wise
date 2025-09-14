@@ -27,7 +27,8 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "bwise_income")
-@Table(name = "bwise_income", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "salary_month"})})
+@Table(name = "bwise_income", schema = "public", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"user_id", "salary_month"})})
 public class Income extends BaseModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
