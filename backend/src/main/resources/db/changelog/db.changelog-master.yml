@@ -1,6 +1,6 @@
 databaseChangeLog:
 - changeSet:
-    id: 1757836362529-1
+    id: 1757850039138-1
     author: nuwansamarasinghe (generated)
     changes:
     - createTable:
@@ -51,9 +51,10 @@ databaseChangeLog:
         - column:
             name: user_id
             type: UUID
+        schemaName: public
         tableName: bwise_income
 - changeSet:
-    id: 1757836362529-2
+    id: 1757850039138-2
     author: nuwansamarasinghe (generated)
     changes:
     - createTable:
@@ -91,17 +92,19 @@ databaseChangeLog:
               nullable: false
             name: username
             type: VARCHAR(255)
+        schemaName: public
         tableName: bwise_user
 - changeSet:
-    id: 1757836362529-3
+    id: 1757850039138-3
     author: nuwansamarasinghe (generated)
     changes:
     - addUniqueConstraint:
         columnNames: username
         constraintName: uk4epl3q0c5vamd6fxonj21frwi
+        schemaName: public
         tableName: bwise_user
 - changeSet:
-    id: 1757836362529-4
+    id: 1757850039138-4
     author: nuwansamarasinghe (generated)
     changes:
     - createTable:
@@ -152,9 +155,10 @@ databaseChangeLog:
         - column:
             name: user_id
             type: UUID
+        schemaName: public
         tableName: bwise_budget
 - changeSet:
-    id: 1757836362529-5
+    id: 1757850039138-5
     author: nuwansamarasinghe (generated)
     changes:
     - createTable:
@@ -180,9 +184,10 @@ databaseChangeLog:
         - column:
             name: user_id
             type: UUID
+        schemaName: public
         tableName: bwise_category
 - changeSet:
-    id: 1757836362529-6
+    id: 1757850039138-6
     author: nuwansamarasinghe (generated)
     changes:
     - createTable:
@@ -233,9 +238,10 @@ databaseChangeLog:
         - column:
             name: user_id
             type: UUID
+        schemaName: public
         tableName: bwise_expense
 - changeSet:
-    id: 1757836362529-7
+    id: 1757850039138-7
     author: nuwansamarasinghe (generated)
     changes:
     - createTable:
@@ -288,14 +294,16 @@ databaseChangeLog:
               nullable: false
             name: saving_month
             type: date
+        schemaName: public
         tableName: bwise_savings
 - changeSet:
-    id: 1757836362529-8
+    id: 1757850039138-8
     author: nuwansamarasinghe (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: user_id
         baseTableName: bwise_income
+        baseTableSchemaName: public
         constraintName: fk15nx89cni6hh1oyf24sb96emd
         deferrable: false
         initiallyDeferred: false
@@ -303,14 +311,16 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: bwise_user
+        referencedTableSchemaName: public
         validate: true
 - changeSet:
-    id: 1757836362529-9
+    id: 1757850039138-9
     author: nuwansamarasinghe (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: user_id
         baseTableName: bwise_budget
+        baseTableSchemaName: public
         constraintName: fk4429stot6ypx6f1xb987bg68q
         deferrable: false
         initiallyDeferred: false
@@ -318,14 +328,16 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: bwise_user
+        referencedTableSchemaName: public
         validate: true
 - changeSet:
-    id: 1757836362529-10
+    id: 1757850039138-10
     author: nuwansamarasinghe (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: user_id
         baseTableName: bwise_expense
+        baseTableSchemaName: public
         constraintName: fk45unbu6qp2kryjuqncfob1mnn
         deferrable: false
         initiallyDeferred: false
@@ -333,14 +345,16 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: bwise_user
+        referencedTableSchemaName: public
         validate: true
 - changeSet:
-    id: 1757836362529-11
+    id: 1757850039138-11
     author: nuwansamarasinghe (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: category_id
         baseTableName: bwise_expense
+        baseTableSchemaName: public
         constraintName: fkac3pfy6v2slpegnbx5bn5b9qk
         deferrable: false
         initiallyDeferred: false
@@ -348,14 +362,16 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: bwise_category
+        referencedTableSchemaName: public
         validate: true
 - changeSet:
-    id: 1757836362529-12
+    id: 1757850039138-12
     author: nuwansamarasinghe (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: user_id
         baseTableName: bwise_savings
+        baseTableSchemaName: public
         constraintName: fkdh3218k40umdhr6f9gabjl983
         deferrable: false
         initiallyDeferred: false
@@ -363,14 +379,16 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: bwise_user
+        referencedTableSchemaName: public
         validate: true
 - changeSet:
-    id: 1757836362529-13
+    id: 1757850039138-13
     author: nuwansamarasinghe (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: user_id
         baseTableName: bwise_category
+        baseTableSchemaName: public
         constraintName: fkh76gftl0xgwlk4noh3sttukop
         deferrable: false
         initiallyDeferred: false
@@ -378,14 +396,16 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: bwise_user
+        referencedTableSchemaName: public
         validate: true
 - changeSet:
-    id: 1757836362529-14
+    id: 1757850039138-14
     author: nuwansamarasinghe (generated)
     changes:
     - addForeignKeyConstraint:
         baseColumnNames: category_id
         baseTableName: bwise_budget
+        baseTableSchemaName: public
         constraintName: fkjt2xo268wdaknresn8llagg8r
         deferrable: false
         initiallyDeferred: false
@@ -393,5 +413,9 @@ databaseChangeLog:
         onUpdate: NO ACTION
         referencedColumnNames: id
         referencedTableName: bwise_category
+        referencedTableSchemaName: public
         validate: true
-
+databaseChangeLog:
+  - includeAll:
+      path: changesets
+      relativeToChangelogFile: true

@@ -1,0 +1,30 @@
+databaseChangeLog:
+- changeSet:
+    id: 1757850059239-1
+    author: nuwansamarasinghe (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: there_isanew_column
+            type: varchar(255)
+        schemaName: public
+        tableName: bwise_budget
+- changeSet:
+    id: 1757850059239-2
+    author: nuwansamarasinghe (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: user_id, income_month
+        constraintName: UKa37dkqlu9gfrtocokilefwsqn
+        schemaName: public
+        tableName: bwise_income
+- changeSet:
+    id: 1757850059239-3
+    author: nuwansamarasinghe (generated)
+    changes:
+    - dropColumn:
+        columnName: income_month
+        schemaName: public
+        tableName: bwise_savings
+

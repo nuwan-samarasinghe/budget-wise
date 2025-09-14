@@ -1,0 +1,10 @@
+databaseChangeLog:
+- changeSet:
+    id: 1757852485699-1
+    author: nuwansamarasinghe (generated)
+    changes:
+    - dropColumn:
+        columnName: there_isanew_column
+        schemaName: public
+        tableName: bwise_budget
+

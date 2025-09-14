@@ -103,20 +103,21 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
-    implementation 'org.modelmapper:modelmapper:3.2.4'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
-    liquibaseRuntime 'org.liquibase:liquibase-core:4.26.0'
-    liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
-    liquibaseRuntime 'info.picocli:picocli:4.6.1'
-    liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate6:4.26.0'
-    liquibaseRuntime 'org.postgresql:postgresql:42.7.4'
-    liquibaseRuntime files(sourceSets.main.output)
+  implementation 'org.liquibase:liquibase-core:4.26.0'
+  implementation 'org.springframework.boot:spring-boot-starter-aop'
+  implementation 'org.modelmapper:modelmapper:3.2.4'
+  implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9'
+  liquibaseRuntime 'org.liquibase:liquibase-core:4.26.0'
+  liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.2'
+  liquibaseRuntime 'info.picocli:picocli:4.6.1'
+  liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate6:4.26.0'
+  liquibaseRuntime 'org.postgresql:postgresql:42.7.4'
+  liquibaseRuntime files(sourceSets.main.output)
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok'
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+  implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+  runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+  runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
@@ -141,26 +142,18 @@ tasks.register("printLiquibaseRuntime") {
 liquibase {
   activities {
     main {
-      changelogFile "src/main/resources/db/changelog/db.changelog-master.yaml"
-
-      // Target DB
       url "jdbc:postgresql://localhost:5432/budget_wise"
       username "budget_wise"
       password "budget_wise"
-
-      // Do NOT filter schemas out during the diff (let it see the HIBERNATE side)
-      // schemas "public"   // <- comment this out for the diffChangelog run
-
-      // Remap schemas in the generated changelog so output uses 'public'
-      outputSchemas "public"        // maps reference->output schema
-      includeSchema false           // don’t write schema qualifiers in changesets (default)
-
-      // Hibernate reference (your entities)
+      outputSchemas "public"
+      includeSchema false
       referenceUrl """hibernate:spring:com.budgetwise,com.budgetwise.backend.models
         ?dialect=org.hibernate.dialect.PostgreSQLDialect
         &hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         &hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
         &hibernate.default_schema=public"""
+      outputSchemas "public"
+      includeSchema false
     }
   }
 }
