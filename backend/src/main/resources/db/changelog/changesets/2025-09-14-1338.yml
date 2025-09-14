@@ -1,17 +1,6 @@
 databaseChangeLog:
 - changeSet:
-    id: 1757850059239-1
-    author: nuwansamarasinghe (generated)
-    changes:
-    - addColumn:
-        columns:
-        - column:
-            name: there_isanew_column
-            type: varchar(255)
-        schemaName: public
-        tableName: bwise_budget
-- changeSet:
-    id: 1757850059239-2
+    id: 1757853503035-1
     author: nuwansamarasinghe (generated)
     changes:
     - addUniqueConstraint:
@@ -20,11 +9,13 @@ databaseChangeLog:
         schemaName: public
         tableName: bwise_income
 - changeSet:
-    id: 1757850059239-3
+    id: 1757853503035-2
     author: nuwansamarasinghe (generated)
     changes:
     - dropColumn:
         columnName: income_month
         schemaName: public
         tableName: bwise_savings
+    - tagDatabase:
+          tag: release-1.0.0
 

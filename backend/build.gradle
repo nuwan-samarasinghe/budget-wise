@@ -142,6 +142,7 @@ tasks.register("printLiquibaseRuntime") {
 liquibase {
   activities {
     main {
+      changelogFile "db/changelog/db.changelog-master.yml"
       url "jdbc:postgresql://localhost:5432/budget_wise"
       username "budget_wise"
       password "budget_wise"
