@@ -16,6 +16,4 @@ databaseChangeLog:
         columnName: income_month
         schemaName: public
         tableName: bwise_savings
-    - tagDatabase:
-          tag: release-1.0.0
 
