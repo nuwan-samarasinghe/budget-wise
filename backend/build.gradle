@@ -140,6 +140,7 @@ tasks.register("printLiquibaseRuntime") {
 }
 
 liquibase {
+  runList = 'main'
   activities {
     main {
       changelogFile "db/changelog/db.changelog-master.yml"
@@ -150,11 +151,9 @@ liquibase {
       includeSchema false
       referenceUrl """hibernate:spring:com.budgetwise,com.budgetwise.backend.models
         ?dialect=org.hibernate.dialect.PostgreSQLDialect
+        &hibernate.default_schema=public
         &hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-        &hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-        &hibernate.default_schema=public"""
-      outputSchemas "public"
-      includeSchema false
+        &hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"""
     }
   }
 }
