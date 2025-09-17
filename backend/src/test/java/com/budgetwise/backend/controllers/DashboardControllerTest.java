@@ -27,10 +27,10 @@ public class DashboardControllerTest extends AbstractBaseTest {
 		income3.setIncomeMonth(YearMonth.of(YearMonth.now().getYear(), 3));
 		Income income4 = this.factory.income.createAndPersist();
 		income4.setIncomeMonth(YearMonth.of(YearMonth.now().getYear(), 4));
-		income1.setUser(this.permenentUser);
-		income2.setUser(this.permenentUser);
-		income3.setUser(this.permenentUser);
-		income4.setUser(this.permenentUser);
+		income1.setUser(this.getTestUser());
+		income2.setUser(this.getTestUser());
+		income3.setUser(this.getTestUser());
+		income4.setUser(this.getTestUser());
 		this.repository.income.saveAllAndFlush(List.of(income1, income2, income3, income4));
 
 		Budget budget1 = this.factory.budget.createAndPersist();
@@ -41,10 +41,10 @@ public class DashboardControllerTest extends AbstractBaseTest {
 		budget3.setBudgetMonth(YearMonth.of(YearMonth.now().getYear(), 3));
 		Budget budget4 = this.factory.budget.createAndPersist();
 		budget4.setBudgetMonth(YearMonth.of(YearMonth.now().getYear(), 4));
-		budget1.setUser(this.permenentUser);
-		budget2.setUser(this.permenentUser);
-		budget3.setUser(this.permenentUser);
-		budget4.setUser(this.permenentUser);
+		budget1.setUser(this.getTestUser());
+		budget2.setUser(this.getTestUser());
+		budget3.setUser(this.getTestUser());
+		budget4.setUser(this.getTestUser());
 		this.repository.budget.saveAllAndFlush(List.of(budget1, budget2, budget3, budget4));
 
 		this.mockMvc.perform(get("/api/dashboard").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate())))

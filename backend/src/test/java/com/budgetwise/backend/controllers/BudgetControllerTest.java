@@ -28,8 +28,8 @@ class BudgetControllerTest extends AbstractBaseTest {
 	void testGetUserBudgets() throws Exception {
 		Budget budget1 = this.factory.budget.createAndPersist();
 		Budget budget2 = this.factory.budget.createAndPersist();
-		budget1.setUser(this.permenentUser);
-		budget2.setUser(this.permenentUser);
+		budget1.setUser(this.getTestUser());
+		budget2.setUser(this.getTestUser());
 		Optional<Category> catOpt = repository.category.findByUserOrGlobal(null).stream().findFirst();
 		assertTrue(catOpt.isPresent());
 		budget1.setCategory(catOpt.get());
@@ -61,7 +61,7 @@ class BudgetControllerTest extends AbstractBaseTest {
 	@Test
 	void testDeleteBudget() throws Exception {
 		Budget budget1 = this.factory.budget.createAndPersist();
-		budget1.setUser(this.permenentUser);
+		budget1.setUser(this.getTestUser());
 		this.repository.budget.saveAndFlush(budget1);
 		this.mockMvc
 				.perform(delete("/api/budgets/{budgetId}", budget1.getId()).with(csrf())
@@ -79,10 +79,10 @@ class BudgetControllerTest extends AbstractBaseTest {
 		budget3.setBudgetMonth(YearMonth.of(YearMonth.now().getYear(), 3));
 		Budget budget4 = this.factory.budget.createAndPersist();
 		budget4.setBudgetMonth(YearMonth.of(YearMonth.now().getYear(), 4));
-		budget1.setUser(this.permenentUser);
-		budget2.setUser(this.permenentUser);
-		budget3.setUser(this.permenentUser);
-		budget4.setUser(this.permenentUser);
+		budget1.setUser(this.getTestUser());
+		budget2.setUser(this.getTestUser());
+		budget3.setUser(this.getTestUser());
+		budget4.setUser(this.getTestUser());
 		this.repository.budget.saveAllAndFlush(List.of(budget1, budget2, budget3, budget4));
 		this.mockMvc
 				.perform(get("/api/budgets/summary").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate())))
@@ -96,7 +96,7 @@ class BudgetControllerTest extends AbstractBaseTest {
 		Optional<Category> catOpt = repository.category.findByUserOrGlobal(null).stream().findAny();
 		assertTrue(catOpt.isPresent());
 		budget1.setCategory(catOpt.get());
-		budget1.setUser(this.permenentUser);
+		budget1.setUser(this.getTestUser());
 		this.repository.budget.saveAndFlush(budget1);
 		this.mockMvc
 				.perform(post("/api/budgets/{budgetId}/transfer", budget1.getId()).with(csrf())

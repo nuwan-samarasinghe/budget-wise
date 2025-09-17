@@ -1,12 +1,5 @@
 package com.budgetwise.backend.controllers;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.List;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -17,8 +10,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.budgetwise.backend.common.AbstractBaseTest;
 import com.budgetwise.backend.dto.IncomeDto;
 import com.budgetwise.backend.models.Income;
-
 import jakarta.servlet.http.Cookie;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 @DisplayName("IncomeControllerTest Integration Tests")
 class IncomeControllerTest extends AbstractBaseTest {
@@ -27,11 +25,11 @@ class IncomeControllerTest extends AbstractBaseTest {
 	void testGetIncomes() throws Exception {
 		Income income1 = this.factory.income.createAndPersist();
 		Income income2 = this.factory.income.createAndPersist();
-		income1.setUser(this.permenentUser);
-		income2.setUser(this.permenentUser);
+		income1.setUser(this.getTestUser());
+		income2.setUser(this.getTestUser());
 		this.repository.income.saveAllAndFlush(List.of(income1, income2));
 		this.mockMvc.perform(get("/api/incomes").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate())))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(6));
+				.andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(2));
 	}
 
 	@Test
@@ -52,7 +50,7 @@ class IncomeControllerTest extends AbstractBaseTest {
 	@Test
 	void testDeleteIncome() throws Exception {
 		Income income1 = this.factory.income.createAndPersist();
-		income1.setUser(this.permenentUser);
+		income1.setUser(this.getTestUser());
 		income1.setRecurrent(Boolean.FALSE);
 		this.repository.income.saveAndFlush(income1);
 		this.mockMvc
@@ -71,10 +69,10 @@ class IncomeControllerTest extends AbstractBaseTest {
 		income3.setIncomeMonth(YearMonth.of(YearMonth.now().getYear(), 3));
 		Income income4 = this.factory.income.createAndPersist();
 		income4.setIncomeMonth(YearMonth.of(YearMonth.now().getYear(), 4));
-		income1.setUser(this.permenentUser);
-		income2.setUser(this.permenentUser);
-		income3.setUser(this.permenentUser);
-		income4.setUser(this.permenentUser);
+		income1.setUser(this.getTestUser());
+		income2.setUser(this.getTestUser());
+		income3.setUser(this.getTestUser());
+		income4.setUser(this.getTestUser());
 		this.repository.income.saveAllAndFlush(List.of(income1, income2, income3, income4));
 		this.mockMvc
 				.perform(get("/api/incomes/summary").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate())))

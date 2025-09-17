@@ -1,15 +1,13 @@
 package com.budgetwise.backend.common.data;
 
+import com.budgetwise.backend.models.Saving;
+import com.budgetwise.backend.repositories.SavingRepository;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
-
 import org.springframework.stereotype.Component;
-
-import com.budgetwise.backend.models.Saving;
-import com.budgetwise.backend.repositories.SavingRepository;
 
 @Component
 public class SavingFactory extends AbstractFactory<Saving> {
