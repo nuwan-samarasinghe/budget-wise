@@ -25,8 +25,8 @@ class SavingsControllerTest extends AbstractBaseTest {
 	void testGetSavings() throws Exception {
 		Saving saving1 = this.factory.saving.createAndPersist();
 		Saving saving2 = this.factory.saving.createAndPersist();
-		saving1.setUser(this.permenentUser);
-		saving2.setUser(this.permenentUser);
+		saving1.setUser(this.getTestUser());
+		saving2.setUser(this.getTestUser());
 		this.repository.savings.saveAllAndFlush(List.of(saving1, saving2));
 		this.mockMvc.perform(get("/api/savings").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate())))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(2));
@@ -49,7 +49,7 @@ class SavingsControllerTest extends AbstractBaseTest {
 	@Test
 	void testDeleteSaving() throws Exception {
 		Saving saving1 = this.factory.saving.createAndPersist();
-		saving1.setUser(this.permenentUser);
+		saving1.setUser(this.getTestUser());
 		saving1.setRecurrent(Boolean.FALSE);
 		this.repository.savings.saveAndFlush(saving1);
 		this.mockMvc

@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "bwise_expense")
+@Table(name = "bwise_expense", schema = "public")
 public class Expense extends BaseModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)

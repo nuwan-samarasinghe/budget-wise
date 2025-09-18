@@ -1,0 +1,19 @@
+databaseChangeLog:
+- changeSet:
+    id: 1758051835290-1
+    author: nuwansamarasinghe (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: user_id, income_month
+        constraintName: UKa37dkqlu9gfrtocokilefwsqn
+        schemaName: public
+        tableName: bwise_income
+- changeSet:
+    id: 1758051835290-2
+    author: nuwansamarasinghe (generated)
+    changes:
+    - dropColumn:
+        columnName: income_month
+        schemaName: public
+        tableName: bwise_savings
+

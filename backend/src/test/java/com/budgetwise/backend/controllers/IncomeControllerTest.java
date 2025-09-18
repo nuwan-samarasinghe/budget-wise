@@ -25,11 +25,11 @@ class IncomeControllerTest extends AbstractBaseTest {
 	void testGetIncomes() throws Exception {
 		Income income1 = this.factory.income.createAndPersist();
 		Income income2 = this.factory.income.createAndPersist();
-		income1.setUser(this.permenentUser);
-		income2.setUser(this.permenentUser);
+		income1.setUser(this.getTestUser());
+		income2.setUser(this.getTestUser());
 		this.repository.income.saveAllAndFlush(List.of(income1, income2));
 		this.mockMvc.perform(get("/api/incomes").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate())))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(6));
+				.andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(2));
 	}
 
 	@Test
@@ -50,7 +50,7 @@ class IncomeControllerTest extends AbstractBaseTest {
 	@Test
 	void testDeleteIncome() throws Exception {
 		Income income1 = this.factory.income.createAndPersist();
-		income1.setUser(this.permenentUser);
+		income1.setUser(this.getTestUser());
 		income1.setRecurrent(Boolean.FALSE);
 		this.repository.income.saveAndFlush(income1);
 		this.mockMvc
@@ -69,10 +69,10 @@ class IncomeControllerTest extends AbstractBaseTest {
 		income3.setIncomeMonth(YearMonth.of(YearMonth.now().getYear(), 3));
 		Income income4 = this.factory.income.createAndPersist();
 		income4.setIncomeMonth(YearMonth.of(YearMonth.now().getYear(), 4));
-		income1.setUser(this.permenentUser);
-		income2.setUser(this.permenentUser);
-		income3.setUser(this.permenentUser);
-		income4.setUser(this.permenentUser);
+		income1.setUser(this.getTestUser());
+		income2.setUser(this.getTestUser());
+		income3.setUser(this.getTestUser());
+		income4.setUser(this.getTestUser());
 		this.repository.income.saveAllAndFlush(List.of(income1, income2, income3, income4));
 		this.mockMvc
 				.perform(get("/api/incomes/summary").with(csrf()).cookie(new Cookie("USER_SESSSION", authenticate())))
