@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1758051835290-increment-1
+      author: nuwansamarasinghe
+      changes:
+        - sqlFile:
+            path: ../../sql/apply/2025_11_05_uq_category.sql
+            relativeToChangelogFile: true
+      rollback:
+        - sqlFile:
+            path: ../../sql/rollback/2025_11_05_uq_category_rollback.sql
+            relativeToChangelogFile: true
