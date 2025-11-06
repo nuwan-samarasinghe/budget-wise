@@ -1,15 +1,13 @@
 package com.budgetwise.backend.common;
 
+import com.budgetwise.backend.models.Category;
+import com.budgetwise.backend.repositories.CategoryRepository;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
-
-import com.budgetwise.backend.models.Category;
-import com.budgetwise.backend.repositories.CategoryRepository;
 
 @Component
 public class DataInitializer implements ApplicationRunner {
