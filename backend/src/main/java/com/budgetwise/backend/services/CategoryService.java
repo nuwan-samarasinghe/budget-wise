@@ -22,7 +22,7 @@ public class CategoryService {
 	}
 
 	public ResponseEntity<List<CategoryDto>> getUserCategories() {
-		return ResponseEntity.ok(this.interfaces.category.findByUserOrGlobal(this.securityUtil.getCurrentUser())
+		return ResponseEntity.ok(this.interfaces.category.findAll()
 				.stream().map(cat -> this.mapper.map(cat, CategoryDto.class)).toList());
 	}
 }

@@ -30,7 +30,7 @@ class BudgetControllerTest extends AbstractBaseTest {
 		Budget budget2 = this.factory.budget.createAndPersist();
 		budget1.setUser(this.getTestUser());
 		budget2.setUser(this.getTestUser());
-		Optional<Category> catOpt = repository.category.findByUserOrGlobal(null).stream().findFirst();
+		Optional<Category> catOpt = repository.category.findAll().stream().findFirst();
 		assertTrue(catOpt.isPresent());
 		budget1.setCategory(catOpt.get());
 		budget2.setCategory(catOpt.get());
@@ -46,7 +46,7 @@ class BudgetControllerTest extends AbstractBaseTest {
 		inputBudget.setNote("Bill payment");
 		inputBudget.setRecurrent(Boolean.FALSE);
 		inputBudget.setBudgetMonth(YearMonth.now());
-		Optional<Category> catOpt = repository.category.findByUserOrGlobal(null).stream().findAny();
+		Optional<Category> catOpt = repository.category.findAll().stream().findAny();
 		assertTrue(catOpt.isPresent());
 		inputBudget.setCategory(new CategoryDto(catOpt.get().getId(), catOpt.get().getName()));
 		this.mockMvc
@@ -93,7 +93,7 @@ class BudgetControllerTest extends AbstractBaseTest {
 	@Test
 	void testtransferBudgetToExpense() throws Exception {
 		Budget budget1 = this.factory.budget.createAndPersist();
-		Optional<Category> catOpt = repository.category.findByUserOrGlobal(null).stream().findAny();
+		Optional<Category> catOpt = repository.category.findAll().stream().findAny();
 		assertTrue(catOpt.isPresent());
 		budget1.setCategory(catOpt.get());
 		budget1.setUser(this.getTestUser());
