@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025-11-06-seed
+      author: nuwansamarasinghe
+      labels: seed
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: ../../sql/apply/2025-11-06_seed.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ;
+            stripComments: true
